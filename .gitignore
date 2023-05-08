@@ -12,6 +12,7 @@
 /vendor
 /.idea
 /.vagrant
+/nova
 Homestead.json
 Homestead.yaml
 npm-debug.log
