@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
+    Route::get('admin/user', 'App\Http\Controllers\UserController@index');
+});
 
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', 'App\Http\Controllers\HomeController@main_page');
 });
 
 

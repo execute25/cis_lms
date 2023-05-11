@@ -25,4 +25,10 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+
+    public function main_page()
+    {
+        return view('layouts.master');
+    }
 }
