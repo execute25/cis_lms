@@ -33,6 +33,17 @@
     <!-- normalize CSS
 		============================================ -->
     <link rel="stylesheet" href="/src/css/normalize.css">
+
+    <!-- chosen CSS
+    ============================================ -->
+    <link rel="stylesheet" href="/src/css/chosen/chosen.css">
+
+
+    <!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="/src/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="/src/css/dialog/dialog.css">
+
     <!-- mCustomScrollbar CSS
 		============================================ -->
     <link rel="stylesheet" href="/src/css/scrollbar/jquery.mCustomScrollbar.min.css">
@@ -240,9 +251,9 @@
 <div class="sale-statistic-area">
     <div class="container">
         <div class="row">
-            <div class="col-lg-9 col-md-12 col-sm-7 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sale-statistic-inner notika-shadow">
-
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     @section('content')
 
                     @show
@@ -287,15 +298,25 @@
     <!-- owl.carousel JS
         ============================================ -->
     <script src="/src/js/owl.carousel.min.js"></script>
+
+    <!-- chosen JS
+    ============================================ -->
+    <script src="/src/js/chosen/chosen.jquery.js"></script>
+
+
     <!-- scrollUp JS
         ============================================ -->
-    <script src="/src/js/jquery.scrollUp.min.js"></script>
+    <script src="/src/js/jquery.form.min.js"></script>
     <!-- meanmenu JS
         ============================================ -->
     <script src="/src/js/meanmenu/jquery.meanmenu.js"></script>
 
     <!-- mCustomScrollbar JS
         ============================================ -->
+    <script src="/src/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <!-- jQuery Form JS
+    ============================================ -->
     <script src="/src/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 
     {{--<script src="/src/js/flot/jquery.flot.js"></script>--}}
@@ -308,6 +329,7 @@
     <script src="/src/js/plugins.js"></script>
     <!--  Chat JS
         ============================================ -->
+    <script src="/src/js/dialog/sweetalert2.min.js"></script>
     <script src="/src/js/chat/moment.min.js"></script>
     <script src="/src/js/chat/jquery.chat.js"></script>
     <!-- main JS

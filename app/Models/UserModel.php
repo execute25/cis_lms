@@ -18,11 +18,17 @@ class UserModel extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+//    protected $fillable = [
+//        'name',
+//        'email',
+//        'password',
+//
+//    ];
+
+    protected $guarded = array(
+        'id',
+        'role',
+    );
 
 
     protected $table = 'users';
@@ -45,4 +51,28 @@ class UserModel extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+
+
+    public static function getRolesList()
+    {
+        return [
+            "super-admin" => "Main Admin",
+            "secretary" => "Secretary",
+            "team-leader" => "Team Leader",
+            "cell-leader" => "Cell Leader",
+            "normal" => "Normal User",
+        ];
+    }
+
+    public static function getDepartmentList()
+    {
+        return [
+            "0" => "Male department",
+            "1" => "Women's department",
+            "2" => "Youth department",
+            "3" => "Old-Aged department",
+        ];
+    }
 }

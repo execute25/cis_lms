@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
-    Route::get('admin/user', 'App\Http\Controllers\UserController@index');
+    Route::any('admin/user/batch', 'App\Http\Controllers\UserController@batch');
+    Route::resource('admin/user', 'App\Http\Controllers\UserController');
+//    Route::get('admin/user', 'App\Http\Controllers\UserController@index');
 });
 
 

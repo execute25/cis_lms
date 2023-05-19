@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Acme\WEB\Repositories\ClassRepository;
-use Acme\WEB\Repositories\CourseRepository;
 use Acme\WEB\Repositories\UserRepository;
 use App\DataTables\UserDataTable;
-use App\DataTables\UsersDataTable;
 use App\Helpers\EaseEncrypt;
-use App\Http\Requests\User\WEB\UserStore;
-use App\Http\Requests\User\WEB\UserUpdate;
-use App\Models\LoveCardModel;
-use App\Models\UserClassModel;
-use App\Models\UserLectionModel;
+use App\Http\Requests\User\UserStore;
+use App\Http\Requests\User\UserUpdate;
 use App\Models\UserModel;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -44,61 +38,28 @@ class UserController extends BaseController
     public function index(UserDataTable $dataTable)
     {
         return $dataTable
-            ->with("admin_level_type", Request::get("admin_level_type", 1))
             ->render('admin.user.index', [
-                "admin_level_type" => Request::get("admin_level_type", 1),
             ]);
     }
 
     public function create()
     {
-
-        if (Request::get("admin_level_type") == 1) {
-            $current_admin_level = [50];
-        } elseif (Request::get("admin_level_type") == 2) {
-            $current_admin_level = [51];
-        } elseif (Request::get("admin_level_type") == 4) {
-            $current_admin_level = [30, 25];
-        } else {
-            $current_admin_level = [0, 10, 20];
-        }
-
-
-        $classes = $this->classRepo->getOpenClasses();
         $this->layout->content = View::make('admin.user.create', [
-            "admin_level_type" => Request::get("admin_level_type", 1),
-            "current_admin_level" => $current_admin_level,
-            "classes" => $classes,
         ]);
     }
 
     public function store(UserStore $request)
     {
-
-        $user_inspect = $this->userRepo->getUserByEmail(Request::get("email"));
-
-        if ($user_inspect)
-            return Response::make('User Already Exist', 410);
-
         $user = $this->userRepo->createNewUser();
-
         $this->userRepo->uploadUserImage($user, Request::file());
 
         if (Request::has('password') && Request::get('password') != '')
             $user->password = $this->userRepo->createPassword(Request::get('password'));
-
-        if (Request::has('class_id') && Request::get('class_id') != '' && $user->class_id != Request::get("class_id")) {
-            $user->password = $this->userRepo->attachClassToUser($user, Request::get('class_id'));
-        }
-
-
-        $user_id_enc = EaseEncrypt::alphaID($user->id);
-
-        $student_name_for_link = str_replace(" ", '_', $user->name);
-        $user->material_link = url("/") . "/web/web_main?id=" . $user_id_enc . "&name=" . $student_name_for_link;
-        $user->zoom_email = $user->id . "_user@gmail.com";
-
         $user->save();
+
+        if (Request::filled('role'))
+            $this->userRepo->attachRoleToUser($user);
+
 
         return Response::json($user);
     }
@@ -107,87 +68,32 @@ class UserController extends BaseController
     {
         $user = $this->userRepo->getUserById($id);
 
-
-        if (Request::get("admin_level_type") == UserModel::USER_LEVEL_TYPE_STAFF) {
-            $classes = $this->classRepo->getClassList();
-        } else {
-            $classes = [];
-        }
-
-        if (Request::get("admin_level_type") == UserModel::USER_LEVEL_TYPE_BB
-            || Request::get("admin_level_type") == UserModel::USER_LEVEL_TYPE_CENTER) {
-            $leaders = $this->userRepo->getLeaderList();
-        } else {
-            $leaders = [];
-        }
-
-
         $this->layout->content = View::make('admin.user.edit')
             ->with('user', $user)
-            ->with('classes', $classes)
-            ->with('leaders', $leaders)
+            ->with('current_role', $user->getRoleNames()->toArray()[0])
             ->with('admin_level_type', Request::get("admin_level_type", 1));
     }
 
     public function update(UserUpdate $request, $id)
     {
-
-        $user_before_update = $this->userRepo->getUserById($id);
-
-        if (Request::has('leader_id') && Request::get('leader_id') != '' && $user_before_update->leader_id != Request::get("leader_id")) {
-            if (!Request::has("bb_end_reason") && $user_before_update->leader_id != 0)
-                return Response::make('bb_end_reason not sent', 415);
-
-            $leader = $this->userRepo->getUserById(Request::get("leader_id"));
-            $this->userRepo->attachLeaderToUser($user_before_update, $leader);
-        }
-
         $user = $this->userRepo->updateUser($id);
         $this->userRepo->uploadUserImage($user, Request::file());
 
         if (Request::has('password') && Request::get('password') != '' && Request::get('password-confirm') != "")
             $user->password = $this->userRepo->createPassword(Request::get('password'));
-
-
-        if (Request::has('admin_level') && Auth::user()->admin_level <= Request::get('admin_level'))
-            $user->admin_level = Request::get("admin_level");
-
-
-        if (Request::has('class_id') && Request::get('class_id') != '' && $user_before_update->class_id != Request::get("class_id")) {
-            $class = $this->classRepo->getClassById(Request::get("class_id"));
-            $this->userRepo->addClassToLeaderHistory($user, $class);
-        }
-
-        $user_id_enc = EaseEncrypt::alphaID($user->id);
-
-        $student_name_for_link = str_replace(" ", '_', $user->name);
-        $user->material_link = url("/") . "/web/web_main?id=" . $user_id_enc . "&name=" . $student_name_for_link;
-
         $user->save();
 
-
-//        if (Request::has('interests'))
-//            $this->userRepo->attachInterestToUser($user, Request::get('interests'));
-
+        if (Request::filled('role'))
+            $this->userRepo->attachRoleToUser($user);
 
         return Response::json($user);
     }
 
-    public function update_receiver_data()
-    {
-        $this->userRepo->updateReceiverData();
-
-        return Response::make('', 200);
-    }
-
     public function destroy($id)
     {
-
-        $user = UserModel::find($id);
-
-
-        if (Auth::user()->cannot('delete', $user))
-            abort(401);
+        if (!Auth::user()->hasAnyRole(['super-admin', 'secretary'])) {
+            abort(411);
+        }
 
         UserModel::destroy($id);
 
@@ -196,7 +102,6 @@ class UserController extends BaseController
 
     public function web_main(CourseRepository $courseRepo)
     {
-
 
         if (Request::filled("id")) {
             $user_id = EaseEncrypt::alphaID(Request::get("id"), "d");
@@ -256,8 +161,6 @@ class UserController extends BaseController
     public
     function batch()
     {
-
-
         if (!Request::hasFile('batch-file'))
             return Response::make('', 400);
         $file = Request::file('batch-file');
@@ -267,6 +170,7 @@ class UserController extends BaseController
 
         $number = 0;
 
+
         while (($data = fgetcsv($file, 10000, ",")) !== FALSE) {
 
             $number++;
@@ -275,84 +179,33 @@ class UserController extends BaseController
                 continue;
 
 
-            $student_name = trim(mb_convert_encoding($data[3], 'UTF-8', 'UTF-8'));
-            $email = trim(mb_convert_encoding($data[10], 'UTF-8', 'UTF-8'));
+            $name = trim(mb_convert_encoding($data[0], 'UTF-8', 'UTF-8'));
+            $email = trim(mb_convert_encoding($data[2], 'UTF-8', 'UTF-8'));
 
 
-            if (!isset($student_name) || $student_name == "")
+            if (!isset($name) || $name == "")
                 continue;
 
-
             $users_inspect = UserModel::
-            where('name', '=', trim($student_name))
+            where('name', '=', trim($name))
                 ->where('email', '=', trim($email))
                 ->first();
 
-            if ($users_inspect) { // If already created usser with current app_id and email just update
+            if ($users_inspect) {
                 $user = $users_inspect;
             } else {
                 $user = new UserModel;
             }
 
             $user->fill(array(
-                'department' => isset($data[1]) ? mb_convert_encoding($data[1], 'UTF-8', 'UTF-8') : '',
-                'contacter_name' => isset($data[2]) ? mb_convert_encoding($data[2], 'UTF-8', 'UTF-8') : '',
-                'name' => trim($student_name),
-                'korean_name' => isset($data[4]) ? mb_convert_encoding($data[4], 'UTF-8', 'UTF-8') : '',
-                'birth_date' => isset($data[5]) ? mb_convert_encoding($data[5], 'UTF-8', 'UTF-8') : '',
-                'country' => isset($data[6]) ? mb_convert_encoding($data[6], 'UTF-8', 'UTF-8') : '',
-                'available_lang' => isset($data[7]) ? mb_convert_encoding($data[7], 'UTF-8', 'UTF-8') : '',
-                'available_lang_level' => isset($data[8]) ? mb_convert_encoding($data[8], 'UTF-8', 'UTF-8') : '',
-                'phone' => isset($data[9]) ? mb_convert_encoding($data[9], 'UTF-8', 'UTF-8') : '',
-                'email' => isset($data[10]) ? trim(mb_convert_encoding($data[10], 'UTF-8', 'UTF-8')) : '',
-                'address' => isset($data[11]) ? mb_convert_encoding($data[11], 'UTF-8', 'UTF-8') : '',
-                'job' => isset($data[12]) ? mb_convert_encoding($data[12], 'UTF-8', 'UTF-8') : '',
-                'religion' => isset($data[13]) ? mb_convert_encoding($data[13], 'UTF-8', 'UTF-8') : '',
-                'time_in_religion' => isset($data[14]) ? mb_convert_encoding($data[14], 'UTF-8', 'UTF-8') : '',
-                'bb_lesson_count' => isset($data[15]) ? mb_convert_encoding($data[15], 'UTF-8', 'UTF-8') : '',
-                'indo_name' => isset($data[16]) ? mb_convert_encoding($data[16], 'UTF-8', 'UTF-8') : '',
-                'indo_phone' => isset($data[17]) ? mb_convert_encoding($data[17], 'UTF-8', 'UTF-8') : '',
-                'teacher_name' => isset($data[18]) ? mb_convert_encoding($data[18], 'UTF-8', 'UTF-8') : '',
-                'teacher_phone' => isset($data[19]) ? mb_convert_encoding($data[19], 'UTF-8', 'UTF-8') : '',
-                'gender' => isset($data[20]) ? mb_convert_encoding($data[20], 'UTF-8', 'UTF-8') : '',
-                'is_pastor' => isset($data[21]) ? mb_convert_encoding($data[21], 'UTF-8', 'UTF-8') : '',
-                'leader_id' => isset($data[22]) ? mb_convert_encoding($data[22], 'UTF-8', 'UTF-8') : '',
-                'student_number' => isset($data[23]) ? mb_convert_encoding($data[23], 'UTF-8', 'UTF-8') : '',
-                'admin_level' => 50,
+                'name' => isset($data[0]) ? mb_convert_encoding($data[0], 'UTF-8', 'UTF-8') : '',
+                'korean_name' => isset($data[1]) ? mb_convert_encoding($data[1], 'UTF-8', 'UTF-8') : '',
+                'email' => isset($data[2]) ? mb_convert_encoding($data[2], 'UTF-8', 'UTF-8') : '',
+                'department' => isset($data[3]) ? mb_convert_encoding($data[3], 'UTF-8', 'UTF-8') : '',
             ));
             $user->save();
 
-
-            $user->admin_level = 50;
-            $user->zoom_email = $user->id . "_user@gmail.com";
-            $user_id_enc = EaseEncrypt::alphaID($user->id);
-
-            $student_name_for_link = str_replace(" ", '_', $student_name);
-            $user->material_link = url("/") . "/web/web_main?id=" . $user_id_enc . "&name=" . $student_name_for_link;
-
-            $user->save();
-
-
-            $class_user = UserClassModel::where("user_id", $user->id)
-                ->where("class_id", mb_convert_encoding($data[0], 'UTF-8', 'UTF-8'))
-                ->first();
-
-            if (!$class_user)
-                UserClassModel::create([
-                    "user_id" => $user->id,
-                    "class_id" => mb_convert_encoding($data[0], 'UTF-8', 'UTF-8'),
-                    "in_at" => date("Y-m-d H:i:s"),
-                ]);
-
-
-            $lovecard = LoveCardModel::where("student_real_name", "like", $user->name . "%")->first();
-
-            if ($lovecard) {
-                $user->love_card_id = $lovecard->id;
-                $user->save();
-            }
-
-
+            $this->userRepo->attachRoleToUser($user, 'normal');
         }
 
         fclose($file);
