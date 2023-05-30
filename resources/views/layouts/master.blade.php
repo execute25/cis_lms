@@ -211,12 +211,10 @@
                 <div class="tab-content custom-menu-content">
                     <div id="Home" class="tab-pane in active notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="/admin/user">Users</a>
-                            </li>
-                            <li><a href="index-2.html">Dashboard Two</a>
-                            </li>
-                            <li><a href="index-3.html">Dashboard Three</a>
-                            </li>
+                            <li><a href="/admin/user">Users</a></li>
+                            <li><a href="/admin/cell">Cells</a></li>
+                            <li><a href="/admin/region">Regions</a></li>
+                            <li><a href="/admin/training">Trainings</a></li>
 
                         </ul>
                     </div>
@@ -252,7 +250,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sale-statistic-inner notika-shadow">
+                <div class="sale-statistic-inner notika-shadow main_middle_content">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     @section('content')
 

@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use Acme\WEB\Repositories\UserRepository;
 use App\DataTables\UserDataTable;
 use App\Helpers\EaseEncrypt;
+use App\Http\Requests\User\CellStore;
 use App\Http\Requests\User\UserStore;
-use App\Http\Requests\User\UserUpdate;
+use App\Http\Requests\User\CellUpdate;
+use App\Models\CellUserModel;
+use App\Models\LoveCardModel;
 use App\Models\UserModel;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -74,7 +79,7 @@ class UserController extends BaseController
             ->with('admin_level_type', Request::get("admin_level_type", 1));
     }
 
-    public function update(UserUpdate $request, $id)
+    public function update(CellUpdate $request, $id)
     {
         $user = $this->userRepo->updateUser($id);
         $this->userRepo->uploadUserImage($user, Request::file());
@@ -214,79 +219,43 @@ class UserController extends BaseController
 
     }
 
-    public function change_student_status()
+
+    public function get_user_list()
     {
-        $user = UserModel::find(Request::get("user_id"));
-        if (!$user)
-            return Response::make("", 411);
+        $users = UserModel::query();
+        $users = $users
+            ->where(function ($q) {
+                $q->where("users.name", "like", "%" . urldecode(Request::get("q")) . "%")
+                    ->orWhere("users.korean_name", "like", "%" . urldecode(Request::get("q")) . "%");
 
-        $user->student_status = Request::get("student_status");
-        $user->save();
+            })
+            ->select("users.id", DB::raw("CONCAT(users.name,' (', users.korean_name , ')') as text")
+            )
+            ->get();
 
-        return $user;
+        return [
+            "results" => $users,
+            "pagination" => ["more" => false]
+        ];
+
 
     }
 
+    public function search_users()
+    {
+        $selected_members = CellUserModel::where("cell_id", Request::get("cell_id"))->pluck("user_id");
 
-//    public function batch(\Acme\WEB\Repositories\UserRepository $userRepo)
-//    {
-//        if (!Request::hasFile('batch-file'))
-//            return Response::make('', 400);
-//        $file = Request::file('batch-file');
-//        $csvData = file_get_contents($file);
-//        $lines = explode(PHP_EOL, $csvData);
-//
-//
-//        $list = array();
-//        $i = 0;
-//        foreach ($lines as $line) {
-//            if ($i != 0 && $line != "")
-//                $list[] = str_getcsv($line);
-//            $i++;
-//        }
-//
-//
-//        foreach ($list as $data) {
-//
-//            if (!isset($data[0]))
-//                continue;
-//
-//            try {
-//                $users_inspect = UserModel::
-//                where('email', '=', trim($data[4]))
-//                    ->first();
-//
-//                if ($users_inspect) { // If already created usser with current app_id and email just update
-//                    $user = $users_inspect;
-//                } else {
-//                    $user = new UserModel;
-//                }
-//
-//                $user->fill(array(
-//                    'name' => $data[1],
-//                    'last_name' => $data[2],
-//                    'korean_name' => $data[3],
-//                    'email' => iconv('EUC-KR', 'UTF-8', $data[4]),
-//                ));
-//
-//                $user->admin_level = $data[0];
-//                $user->password = Hash::make(144000);
-//                $user->save();
-//
-//
-////                $user_class = $this->classRepo->getUserAttendClass($user->id);
-////                if ($user_class) {
-////                    $class = $this->classRepo->getClassById($user_class->class_id);
-////                }
-//
-//                $class = $this->classRepo->getClassById($data[5]);
-//
-//
-//                $this->classRepo->addUserToClass($class, $user->id);
-//            } catch (Exception $e) {
-//
-//            }
-//        }
-//    }
+        $members = UserModel::query();
+        $members = $members->where(function ($q) {
+            $q->where("name", "like", "%" . urldecode(Request::get("search")) . "%")
+                ->where("korean_name", "like", "%" . urldecode(Request::get("search")) . "%");
+        })
+            ->whereNotIn("users.id", $selected_members)
+            ->get();
+
+        return $members;
+
+
+    }
 
 }

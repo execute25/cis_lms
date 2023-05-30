@@ -18,18 +18,11 @@ class UserModel extends Authenticatable
      *
      * @var array<int, string>
      */
-//    protected $fillable = [
-//        'name',
-//        'email',
-//        'password',
-//
-//    ];
 
     protected $guarded = array(
         'id',
         'role',
     );
-
 
     protected $table = 'users';
 
@@ -53,8 +46,6 @@ class UserModel extends Authenticatable
     ];
 
 
-
-
     public static function getRolesList()
     {
         return [
@@ -74,5 +65,10 @@ class UserModel extends Authenticatable
             "2" => "Youth department",
             "3" => "Old-Aged department",
         ];
+    }
+
+    public function cells()
+    {
+        return $this->belongsToMany(CellModel::class, 'cell_user', 'user_id', 'cell_id');
     }
 }

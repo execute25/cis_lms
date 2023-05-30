@@ -12,6 +12,21 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function () {
+    Route::post('admin/cell/{id}/attach_member', 'App\Http\Controllers\CellController@attach_member');
+    Route::post('admin/cell/{id}/detach_member', 'App\Http\Controllers\CellController@detach_member');
+    Route::get('admin/cell/{id}/get_member_list', 'App\Http\Controllers\CellController@get_member_list');
+    Route::resource('admin/cell', 'App\Http\Controllers\CellController');
+
+    Route::resource('admin/region', 'App\Http\Controllers\RegionController');
+
+    Route::get('admin/user/get_user_list', 'App\Http\Controllers\UserController@get_user_list');
+    Route::get('admin/user/search_users', 'App\Http\Controllers\UserController@search_users');
+
+    Route::resource('admin/training', 'App\Http\Controllers\TrainingController');
+//    Route::get('admin/user', 'App\Http\Controllers\UserController@index');
+});
+
 
 Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
     Route::any('admin/user/batch', 'App\Http\Controllers\UserController@batch');
