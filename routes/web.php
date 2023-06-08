@@ -24,6 +24,14 @@ Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function 
     Route::get('admin/user/search_users', 'App\Http\Controllers\UserController@search_users');
 
     Route::resource('admin/training', 'App\Http\Controllers\TrainingController');
+
+
+    Route::resource('admin/training_category', 'App\Http\Controllers\TrainingCategoryController');
+
+    Route::post('admin/membergroup/{id}/attach_member', 'App\Http\Controllers\MemberGroupController@attach_member');
+    Route::post('admin/membergroup/{id}/detach_member', 'App\Http\Controllers\MemberGroupController@detach_member');
+    Route::get('admin/membergroup/{id}/get_member_list', 'App\Http\Controllers\MemberGroupController@get_member_list');
+    Route::resource('admin/membergroup', 'App\Http\Controllers\MemberGroupController');
 //    Route::get('admin/user', 'App\Http\Controllers\UserController@index');
 });
 

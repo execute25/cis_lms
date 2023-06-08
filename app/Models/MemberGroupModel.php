@@ -5,18 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TrainingModel extends Model
+class MemberGroupModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'trainings';
+    protected $table = 'membergroups';
 
     public $timestamps = true;
 
     protected $guarded = array(
         'id',
-        'include_groups',
     );
 
+
+    public function members()
+    {
+        return $this->belongsToMany(UserModel::class, 'membergroup_user', 'membergroup_id', 'user_id');
+    }
 
 }

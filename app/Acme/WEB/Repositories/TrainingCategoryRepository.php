@@ -6,7 +6,7 @@ use App\Helpers\EaseEncrypt;
 use App\Helpers\EaseUpload;
 use App\Models\CellModel;
 use App\Models\RegionModel;
-use App\Models\TrainingModel;
+use App\Models\TrainingCategoryModel;
 use App\Models\UserModel;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\App;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Spatie\Permission\Models\Role;
 
-class TrainingRepository
+class TrainingCategoryRepository
 {
 
     protected $options = '
@@ -33,11 +33,11 @@ class TrainingRepository
         $this->options = json_decode($this->options);
     }
 
-    public function createNewTraining()
+    public function createNewTrainingCategory()
     {
 
         $data = array_filter(Request::all());
-        $query = new TrainingModel(
+        $query = new TrainingCategoryModel(
             $data
         );
 
@@ -50,24 +50,20 @@ class TrainingRepository
         return $query;
     }
 
-    public function getTrainingById($id)
+    public function getTrainingCategoryById($id)
     {
-        return TrainingModel::find($id);
+        return TrainingCategoryModel::find($id);
     }
 
-    public function updateTraining($id)
+    public function updateTrainingCategory($id)
     {
-        $query = $this->getTrainingById($id);
+        $query = $this->getTrainingCategoryById($id);
 
         $data = array_filter(Request::all());
         $query->fill($data);
 
-        if (Request::filled("include_groups")){
+        if (Request::filled("include_groups"))
             $query->include_groups = implode(",", Request::get("include_groups"));
-        }else{
-            $query->include_groups = "";
-        }
-
 
 
         $query->save();

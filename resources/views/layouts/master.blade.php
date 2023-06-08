@@ -214,7 +214,9 @@
                             <li><a href="/admin/user">Users</a></li>
                             <li><a href="/admin/cell">Cells</a></li>
                             <li><a href="/admin/region">Regions</a></li>
-                            <li><a href="/admin/training">Trainings</a></li>
+{{--                            <li><a href="/admin/training">Trainings</a></li>--}}
+                            <li><a href="/admin/training_category">Training Categories</a></li>
+                            <li><a href="/admin/membergroup">Member Groups</a></li>
 
                         </ul>
                     </div>
@@ -275,8 +277,8 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="footer-copy-right">
-                    <p>Copyright © 2018
-                        . All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                    <p>Copyright © 2023
+                        . All rights reserved. CIS Region</p>
                 </div>
             </div>
         </div>

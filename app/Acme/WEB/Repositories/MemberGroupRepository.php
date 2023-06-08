@@ -5,8 +5,8 @@ namespace Acme\WEB\Repositories;
 use App\Helpers\EaseEncrypt;
 use App\Helpers\EaseUpload;
 use App\Models\CellModel;
+use App\Models\MemberGroupModel;
 use App\Models\RegionModel;
-use App\Models\TrainingModel;
 use App\Models\UserModel;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\App;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Spatie\Permission\Models\Role;
 
-class TrainingRepository
+class MemberGroupRepository
 {
 
     protected $options = '
@@ -33,43 +33,27 @@ class TrainingRepository
         $this->options = json_decode($this->options);
     }
 
-    public function createNewTraining()
+    public function createNewMemberGroup()
     {
-
-        $data = array_filter(Request::all());
-        $query = new TrainingModel(
-            $data
+        $query = new MemberGroupModel(
+            Request::all()
         );
-
-        if (Request::filled("include_groups"))
-            $query->include_groups = implode(",", Request::get("include_groups"));
-
-
         $query->save();
 
         return $query;
     }
 
-    public function getTrainingById($id)
+    public function getMemberGroupById($id)
     {
-        return TrainingModel::find($id);
+        return MemberGroupModel::find($id);
     }
 
-    public function updateTraining($id)
+    public function updateMemberGroup($id)
     {
-        $query = $this->getTrainingById($id);
+        $query = $this->getMemberGroupById($id);
 
         $data = array_filter(Request::all());
         $query->fill($data);
-
-        if (Request::filled("include_groups")){
-            $query->include_groups = implode(",", Request::get("include_groups"));
-        }else{
-            $query->include_groups = "";
-        }
-
-
-
         $query->save();
 
         return $query;

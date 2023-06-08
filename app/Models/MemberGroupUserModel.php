@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TrainingModel extends Model
+class MemberGroupUserModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'trainings';
+    protected $table = 'membergroup_user';
 
     public $timestamps = true;
 
     protected $guarded = array(
         'id',
-        'include_groups',
     );
 
 

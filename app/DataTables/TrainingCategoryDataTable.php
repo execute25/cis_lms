@@ -2,9 +2,9 @@
 
 namespace App\DataTables;
 
-use App\Models\Cell;
-use App\Models\CellModel;
-use App\Models\CellUserModel;
+use App\Models\TrainingCategory;
+use App\Models\TrainingCategoryModel;
+use App\Models\TrainingCategoryUserModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class CellDataTable extends DataTable
+class TrainingCategoryDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -27,21 +27,25 @@ class CellDataTable extends DataTable
             ->addColumn('action', function ($data) {
                 $html = '';
 
-                $html .= '<a href="/admin/cell/' . $data->id . '/edit" class="btn btn-xs btn-success" title="Update"><i class="icon-edit"   ></i> Edit</a>
+                $html .= '<a href="/admin/training_category/' . $data->id . '/edit" class="btn btn-xs btn-success" title="Update"><i class="icon-edit"   ></i> Edit</a>
                                 ';
 
 
-                $html .= '<a data-action="destroy" data-id="' . $data->id . '" class="btn btn-danger btn-xs"><i class="icon-remove" ></i> Delete</a>
-                                ';
+                $html .= '<a data-action="destroy" data-id="' . $data->id . '" class="btn btn-danger btn-xs"><i class="icon-remove" ></i> Delete</a>';
 
 
                 return $html;
             })
-            ->editColumn('member_count', function ($data) {
-                $members = CellUserModel::where("cell_id", $data->id)->join("users", "cell_user.user_id", "=", "users.id")->get();
-                return '<span class="btn btn-default show_cell_member_modal"  data-id="' . $data->id . '">' . count($members) . '</span>';
+
+            ->editColumn('training_count', function ($data) {
+                $html = '';
+
+                $html .= '<a href="/admin/training?category_id=' . $data->id . '" class="btn btn-xs btn-success" title=""><i class="icon-edit"   ></i> ' . $data->training_count . '</a>';
+
+
+                return $html;
             })
-            ->rawColumns(['member_count', 'action'])
+            ->rawColumns(['member_count', 'action', 'training_count'])
 //            ->escapeColumns([])
 //
             ;
@@ -50,15 +54,14 @@ class CellDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\CellModel $model
+     * @param \App\Models\TrainingCategoryModel $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query()
     {
 
-        $query = CellModel::query();
-        $query = $query->select($this->getColumns())
-            ->leftjoin("regions", "regions.id", "=", "cells.region_id");
+        $query = TrainingCategoryModel::query();
+        $query = $query->select($this->getColumns());
         return $this->applyScopes($query);
     }
 
@@ -71,7 +74,7 @@ class CellDataTable extends DataTable
     {
 
         return $this->builder()
-            ->setTableId('cell-table')
+            ->setTableId('training_categorie-table')
             ->columns($this->getColumnsFromOut())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -85,11 +88,11 @@ class CellDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'cells.id',
-            'cells.name',
-            'cells.leader_id',
-            'cells.leader_id as member_count',
-            'regions.name as region_name',
+            'training_categories.id',
+            'training_categories.title',
+            'training_categories.order',
+            'training_categories.is_hidden',
+            DB::raw("(SELECT COUNT(*) FROM trainings WHERE trainings.category_id = training_categories.id) as training_count")
         ];
     }
 
@@ -103,25 +106,22 @@ class CellDataTable extends DataTable
     {
         return [
             Column::make('id')
-                ->name("cells.id")
+                ->name("training_categories.id")
                 ->title("ID"),
-            Column::make('name')
-                ->name('cells.name')
-                ->title("Name"),
-            Column::make('leader_id')
-                ->title("Leader Name"),
-
-            Column::computed("member_count")
-                ->exportable(false)
-                ->printable(false)
+            Column::make('title')
+                ->name('training_categories.title')
+                ->title("Title"),
+            Column::make("order")
                 ->width(60)
-                ->title("Cell members"),
-            Column::computed("region_name")
-                ->name('regions.name')
-                ->exportable(false)
-                ->printable(false)
+                ->name('training_categories.orders')
+                ->title("Order"),
+            Column::make("is_hidden")
+                ->name('training_categories.is_hidden')
                 ->width(60)
-                ->title("Region"),
+                ->title("Is Hidden"),
+            Column::make("training_count")
+                ->width(60)
+                ->title("Trainings"),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
@@ -137,6 +137,6 @@ class CellDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Cell_' . date('YmdHis');
+        return 'TrainingCategory_' . date('YmdHis');
     }
 }

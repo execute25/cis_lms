@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Acme\WEB\Repositories\TrainingRepository;
 use App\DataTables\TrainingDataTable;
 use App\Helpers\EaseEncrypt;
+use App\Models\MemberGroupModel;
+use App\Models\TrainingCategoryModel;
 use App\Models\TrainingModel;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -35,14 +37,21 @@ class TrainingController extends BaseController
 
     public function index(TrainingDataTable $dataTable)
     {
-        return $dataTable
+        $training_category = TrainingCategoryModel::find(Request::get("category_id"));
+
+        return $dataTable->with("category_id", Request::get("category_id", 0))
             ->render('admin.training.index', [
+                "training_category" => $training_category
             ]);
     }
 
     public function create()
     {
+        $member_groups = MemberGroupModel::get();
+
         $this->layout->content = View::make('admin.training.create', [
+            "member_groups" => $member_groups,
+            "category_id" => Request::get("category_id", 0),
         ]);
     }
 
@@ -56,9 +65,13 @@ class TrainingController extends BaseController
     public function edit($id)
     {
         $training = $this->trainingRepo->getTrainingById($id);
-
-        $this->layout->content = View::make('admin.training.edit')
-            ->with('training', $training);
+        $member_groups = MemberGroupModel::get();
+        $selected_groups = explode(",", $training->include_groups);
+        $this->layout->content = View::make('admin.training.edit', [
+            'training' => $training,
+            'member_groups' => $member_groups,
+            'selected_groups' => $selected_groups,
+        ]);
     }
 
     public function update($id)

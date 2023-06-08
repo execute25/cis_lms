@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TrainingModel extends Model
+class TrainingCategoryModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'trainings';
+    protected $table = 'training_categories';
 
     public $timestamps = true;
 

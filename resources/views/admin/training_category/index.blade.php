@@ -9,7 +9,6 @@
     <div class="col-md-12">
         <section class="panel">
             <header class="panel-heading">
-                <h4>{{$training_category ? $training_category->title : ''}}</h4>
             </header>
 
             <div class="table-responsive">
@@ -43,7 +42,7 @@
                 var id = $(this).attr("data-id");
                 if (confirm('Are you sure to delete it?')) {
                     $.ajax({
-                        url: '/admin/training/' + id,
+                        url: '/admin/training_category/' + id,
                         data: {
                             _method: "DELETE"
                         },
@@ -58,12 +57,12 @@
 
             $('[data-download-form]').click(function (e) {
                 e.preventDefault();
-                //window.location = '/data/form/training.csv';
-                window.location = '/download/training.csv?root=/data/form';
+                //window.location = '/data/form/training_category.csv';
+                window.location = '/download/training_category.csv?root=/data/form';
             });
 
             $('[data-form-batch]').ajaxForm({
-                url: '/admin/training/batch',
+                url: '/admin/training_category/batch',
                 success: function () {
                     alert('The upload is completed successfully!');
                     $table.DataTable().ajax.reload(null, false);

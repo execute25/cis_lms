@@ -71,4 +71,9 @@ class UserModel extends Authenticatable
     {
         return $this->belongsToMany(CellModel::class, 'cell_user', 'user_id', 'cell_id');
     }
+
+    public function membergroups()
+    {
+        return $this->belongsToMany(MemberGroupModel::class, 'membergroup_user', 'user_id', 'membergroup_id');
+    }
 }

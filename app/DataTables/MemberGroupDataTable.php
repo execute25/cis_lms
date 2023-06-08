@@ -2,9 +2,9 @@
 
 namespace App\DataTables;
 
-use App\Models\Cell;
-use App\Models\CellModel;
-use App\Models\CellUserModel;
+use App\Models\MemberGroup;
+use App\Models\MemberGroupModel;
+use App\Models\MemberGroupUserModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class CellDataTable extends DataTable
+class MemberGroupDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -27,7 +27,7 @@ class CellDataTable extends DataTable
             ->addColumn('action', function ($data) {
                 $html = '';
 
-                $html .= '<a href="/admin/cell/' . $data->id . '/edit" class="btn btn-xs btn-success" title="Update"><i class="icon-edit"   ></i> Edit</a>
+                $html .= '<a href="/admin/membergroup/' . $data->id . '/edit" class="btn btn-xs btn-success" title="Update"><i class="icon-edit"   ></i> Edit</a>
                                 ';
 
 
@@ -38,8 +38,9 @@ class CellDataTable extends DataTable
                 return $html;
             })
             ->editColumn('member_count', function ($data) {
-                $members = CellUserModel::where("cell_id", $data->id)->join("users", "cell_user.user_id", "=", "users.id")->get();
-                return '<span class="btn btn-default show_cell_member_modal"  data-id="' . $data->id . '">' . count($members) . '</span>';
+                $members = MemberGroupUserModel::where("membergroup_id", $data->id)
+                    ->join("users", "membergroup_user.user_id", "=", "users.id")->get();
+                return '<span class="btn btn-default show_membergroup_member_modal"  data-id="' . $data->id . '">' . count($members) . '</span>';
             })
             ->rawColumns(['member_count', 'action'])
 //            ->escapeColumns([])
@@ -50,15 +51,15 @@ class CellDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\CellModel $model
+     * @param \App\Models\MemberGroupModel $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query()
     {
 
-        $query = CellModel::query();
-        $query = $query->select($this->getColumns())
-            ->leftjoin("regions", "regions.id", "=", "cells.region_id");
+        $query = MemberGroupModel::query();
+        $query = $query->select($this->getColumns());
+//            ->leftjoin("regions", "regions.id", "=", "membergroups.region_id")
         return $this->applyScopes($query);
     }
 
@@ -71,7 +72,7 @@ class CellDataTable extends DataTable
     {
 
         return $this->builder()
-            ->setTableId('cell-table')
+            ->setTableId('membergroup-table')
             ->columns($this->getColumnsFromOut())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -85,11 +86,9 @@ class CellDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'cells.id',
-            'cells.name',
-            'cells.leader_id',
-            'cells.leader_id as member_count',
-            'regions.name as region_name',
+            'membergroups.id',
+            'membergroups.name',
+            'membergroups.name as member_count',
         ];
     }
 
@@ -103,25 +102,19 @@ class CellDataTable extends DataTable
     {
         return [
             Column::make('id')
-                ->name("cells.id")
+                ->name("membergroups.id")
                 ->title("ID"),
             Column::make('name')
-                ->name('cells.name')
+                ->name('membergroups.name')
                 ->title("Name"),
-            Column::make('leader_id')
-                ->title("Leader Name"),
+
 
             Column::computed("member_count")
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
-                ->title("Cell members"),
-            Column::computed("region_name")
-                ->name('regions.name')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->title("Region"),
+                ->title("MemberGroup members"),
+
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
@@ -137,6 +130,6 @@ class CellDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Cell_' . date('YmdHis');
+        return 'MemberGroup_' . date('YmdHis');
     }
 }
