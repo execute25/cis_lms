@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Acme\WEB\Repositories\TrainingRepository;
+use Acme\WEB\Repositories\ZoomRepository;
 use App\DataTables\TrainingDataTable;
 use App\Helpers\EaseEncrypt;
 use App\Models\MemberGroupModel;
@@ -47,17 +48,17 @@ class TrainingController extends BaseController
 
     public function create()
     {
-        $member_groups = MemberGroupModel::get();
+
 
         $this->layout->content = View::make('admin.training.create', [
-            "member_groups" => $member_groups,
             "category_id" => Request::get("category_id", 0),
         ]);
     }
 
-    public function store()
+    public function store(ZoomRepository $zoomRepository)
     {
         $training = $this->trainingRepo->createNewTraining();
+        $zoomRepository->createMeeing($training);
 
         return Response::json($training);
     }
@@ -65,12 +66,9 @@ class TrainingController extends BaseController
     public function edit($id)
     {
         $training = $this->trainingRepo->getTrainingById($id);
-        $member_groups = MemberGroupModel::get();
-        $selected_groups = explode(",", $training->include_groups);
+
         $this->layout->content = View::make('admin.training.edit', [
             'training' => $training,
-            'member_groups' => $member_groups,
-            'selected_groups' => $selected_groups,
         ]);
     }
 

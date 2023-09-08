@@ -72,6 +72,21 @@
         </div>
 
 
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+            <div class="nk-int-mk">
+                <h5>Users only from this group</h5>
+            </div>
+            <div class="chosen-select-act fm-cmp-mg">
+                <select class="chosen" multiple="" name="include_groups[]" style="width:200px;"/>
+                <option value=""></option>
+                @foreach($member_groups as $group)
+                    <option value="{{{$group->id}}}">{{{$group->name}}}</option>
+                    @endforeach
+                    </select>
+            </div>
+        </div>
+
+
         <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Create</button>
 
     </form>

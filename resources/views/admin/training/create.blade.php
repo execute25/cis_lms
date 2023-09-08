@@ -55,7 +55,7 @@
 
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div class="nk-int-mk  mg-t-10">
-                <h5>Translation Start date *</h5>
+                <h5>Start date *</h5>
             </div>
             <div class="form-group ic-cmp-int">
                 <div class="form-ic-cmp">
@@ -74,7 +74,7 @@
 
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div class="nk-int-mk  mg-t-10">
-                <h5>Translation Start Time *</h5>
+                <h5>Start Time *</h5>
             </div>
             <div class="form-group ic-cmp-int">
                 <div class="form-ic-cmp">
@@ -84,74 +84,90 @@
 
                     <select class="form-control time_select" required="" name="start_at_time"
                             style="width: 100%; margin-bottom: 10px;">
+                        <?php
+
+                        $time = new DateTime('00:00');
+                        $interval = new DateInterval('PT30M');
+
+                        ?>
+
                         <option value="">Select Time</option>
-                        <option value="00:00">00:00</option>
-                        <option value="00:30">00:30</option>
-                        <option value="01:00">01:00</option>
-                        <option value="01:30">01:30</option>
-                        <option value="02:00">02:00</option>
-                        <option value="02:30">02:30</option>
-                        <option value="03:00">03:00</option>
-                        <option value="03:30">03:30</option>
-                        <option value="04:00">04:00</option>
-                        <option value="04:30">04:30</option>
-                        <option value="05:00">05:00</option>
-                        <option value="05:30">05:30</option>
-                        <option value="06:00">06:00</option>
-                        <option value="06:30">06:30</option>
-                        <option value="07:00">07:00</option>
-                        <option value="07:30">07:30</option>
-                        <option value="08:00">08:00</option>
-                        <option value="08:30">08:30</option>
-                        <option value="09:00">09:00</option>
-                        <option value="09:30">09:30</option>
-                        <option value="10:00">10:00</option>
-                        <option value="10:30">10:30</option>
-                        <option value="11:00">11:00</option>
-                        <option value="11:30">11:30</option>
-                        <option value="12:00">12:00</option>
-                        <option value="12:30">12:30</option>
-                        <option value="13:00">13:00</option>
-                        <option value="13:30">13:30</option>
-                        <option value="14:00">14:00</option>
-                        <option value="14:30">14:30</option>
-                        <option value="15:00">15:00</option>
-                        <option value="15:30">15:30</option>
-                        <option value="16:00">16:00</option>
-                        <option value="16:30">16:30</option>
-                        <option value="17:00">17:00</option>
-                        <option value="17:30">17:30</option>
-                        <option value="18:00">18:00</option>
-                        <option value="18:30">18:30</option>
-                        <option value="19:00">19:00</option>
-                        <option value="19:30">19:30</option>
-                        <option value="20:00">20:00</option>
-                        <option value="20:30">20:30</option>
-                        <option value="21:00">21:00</option>
-                        <option value="21:30">21:30</option>
-                        <option value="22:00">22:00</option>
-                        <option value="22:30">22:30</option>
-                        <option value="23:00">23:00</option>
-                        <option value="23:30">23:30</option>
+                        @for ($i = 0; $i < 24; $i++)
+                            @for ($j = 0; $j < 60; $j+=30)
+                                <?php
+                                $hour = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                $minutes = str_pad($j, 2, '0', STR_PAD_LEFT);
+                                $time = $hour . ":" . $minutes;
+                                ?>
+
+                                <option
+                                    value="{{ $time }}">{{$time}}
+                                </option>
+                            @endfor
+                        @endfor
                     </select>
                 </div>
             </div>
         </div>
 
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
-            <div class="nk-int-mk">
-                <h5>Users only from this group</h5>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="nk-int-mk  mg-t-10">
+                <h5>End date *</h5>
             </div>
-            <div class="chosen-select-act fm-cmp-mg">
-                <select class="chosen" multiple="" name="include_groups[]" style="width:200px;"/>
-                <option value=""></option>
-                @foreach($member_groups as $group)
-                    <option value="{{{$group->id}}}">{{{$group->name}}}</option>
-                    @endforeach
-                    </select>
+            <div class="form-group ic-cmp-int">
+                <div class="form-ic-cmp">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </div>
+                <div class="nk-int-st">
+                    <div class="form-group nk-datapk-ctm form-elet-mg date_normal" id="data_1">
+                        <div class="input-group date nk-int-st">
+                            <span class="input-group-addon"></span>
+                            <input type="text" class="form-control" name="end_at" required="" value="">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="nk-int-mk  mg-t-10">
+                <h5>End Time *</h5>
+            </div>
+            <div class="form-group ic-cmp-int">
+                <div class="form-ic-cmp">
+                    <i class="glyphicon glyphicon-time"></i>
+                </div>
+                <div class="nk-int-st">
+
+                    <select class="form-control time_select" required="" name="end_at_time"
+                            style="width: 100%; margin-bottom: 10px;">
+                        <?php
+
+                        $time = new DateTime('00:00');
+                        $interval = new DateInterval('PT30M');
+
+                        ?>
+
+                        <option value="">Select Time</option>
+                        @for ($i = 0; $i < 24; $i++)
+                            @for ($j = 0; $j < 60; $j+=30)
+                                <?php
+                                $hour = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                $minutes = str_pad($j, 2, '0', STR_PAD_LEFT);
+                                $time = $hour . ":" . $minutes;
+                                ?>
+
+                                <option
+                                      value="{{ $time }}">{{$time}}
+                                </option>
+                            @endfor
+                        @endfor
+                    </select>
+                </div>
+            </div>
+        </div>
+
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="nk-int-mk  mg-t-10">
@@ -171,7 +187,6 @@
                 </div>
             </div>
         </div>
-
 
 
         <input type="hidden" class="form-control" name="category_id" required="" value="{{$category_id}}">

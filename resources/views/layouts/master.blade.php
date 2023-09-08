@@ -136,6 +136,7 @@
                                 </div>
                             </div>
                         </li>
+
                         <li class="nav-item">
                             <a href="#" data-toggle="dropdown" role="button" aria-expanded="false"
                                class="nav-link dropdown-toggle">
@@ -143,6 +144,24 @@
                                 <div class="ntd-ctn"><span>2</span></div>
                             </a>
                         </li>
+
+                        @role(['super-admin'])
+                        <li class="nav-item nc-al">
+                            <a href="/admin/setting/change_setting"  role="button"
+                               aria-expanded="false" class="nav-link dropdown-toggle"><span><i
+                                        class="notika-icon notika-settings"></i></span>
+                            </a>
+                        </li>
+                        @endrole
+
+                        <li class="nav-item nc-al">
+                            <a href="#" data-toggle="dropdown" role="button"
+                               aria-expanded="false" class="nav-link dropdown-toggle"><span><i
+                                        class="glyphicon glyphicon-log-out"></i></span>
+                            </a>
+                        </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -209,17 +228,22 @@
 
                 </ul>
                 <div class="tab-content custom-menu-content">
+
+                    @role(['super-admin', 'secretary'])
                     <div id="Home" class="tab-pane in active notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="/admin/user">Users</a></li>
                             <li><a href="/admin/cell">Cells</a></li>
                             <li><a href="/admin/region">Regions</a></li>
-{{--                            <li><a href="/admin/training">Trainings</a></li>--}}
+                            {{--                            <li><a href="/admin/training">Trainings</a></li>--}}
                             <li><a href="/admin/training_category">Training Categories</a></li>
                             <li><a href="/admin/membergroup">Member Groups</a></li>
 
                         </ul>
                     </div>
+                    @endrole
+
+
                     <div id="mailbox" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="inbox.html">Inbox</a>

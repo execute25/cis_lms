@@ -39,6 +39,9 @@ Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function 
 Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
     Route::any('admin/user/batch', 'App\Http\Controllers\UserController@batch');
     Route::resource('admin/user', 'App\Http\Controllers\UserController');
+
+    Route::get('admin/setting/change_setting', 'App\Http\Controllers\SettingController@change_setting');
+    Route::resource('admin/setting', 'App\Http\Controllers\SettingController');
 //    Route::get('admin/user', 'App\Http\Controllers\UserController@index');
 });
 
@@ -46,6 +49,8 @@ Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'App\Http\Controllers\HomeController@main_page');
 });
+
+Route::get('redirect_zoom', 'ZoomController@redirect_zoom');
 
 
 Auth::routes(['register' => false]);
