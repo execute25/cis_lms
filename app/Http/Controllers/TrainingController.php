@@ -30,10 +30,15 @@ class TrainingController extends BaseController
      */
     private $trainingRepo;
     protected $layout = 'layouts.master';
+    /**
+     * @var ZoomRepository
+     */
+    private $zoomRepository;
 
-    public function __construct(TrainingRepository $trainingRepo)
+    public function __construct(TrainingRepository $trainingRepo, ZoomRepository $zoomRepository)
     {
         $this->trainingRepo = $trainingRepo;
+        $this->zoomRepository = $zoomRepository;
     }
 
     public function index(TrainingDataTable $dataTable)
@@ -55,10 +60,19 @@ class TrainingController extends BaseController
         ]);
     }
 
-    public function store(ZoomRepository $zoomRepository)
+    public function store()
     {
         $training = $this->trainingRepo->createNewTraining();
-        $zoomRepository->createMeeing($training);
+
+        if ($training->is_use_zoom == 1) {
+            $zoom_meeting = $this->zoomRepository->createMeeting($training);
+
+            if (isset($zoom_meeting['id'])) {
+                $training->zoom_conference_id = $zoom_meeting['id'];
+                $training->save();
+            }
+        }
+
 
         return Response::json($training);
     }
@@ -75,6 +89,11 @@ class TrainingController extends BaseController
     public function update($id)
     {
         $training = $this->trainingRepo->updateTraining($id);
+
+        if ($training->is_use_zoom == 1) {
+            $this->zoomRepository->updateMeeging($training);
+        }
+
         return Response::json($training);
     }
 
@@ -84,7 +103,17 @@ class TrainingController extends BaseController
             abort(411);
         }
 
-        TrainingModel::destroy($id);
+        $training = TrainingModel::find($id);
+
+        if ($training) {
+            try {
+                $this->zoomRepository->deleteMeeting($training);
+            } catch (Exception $exception) {
+                Log::error("Meeting delete error. Training id:" . $id);
+            }
+            TrainingModel::destroy($id);
+        }
+
 
         return Response::make('', 200);
     }

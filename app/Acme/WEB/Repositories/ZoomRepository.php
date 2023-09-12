@@ -9,6 +9,7 @@ use App\Models\RegionModel;
 use App\Models\SettingModel;
 use App\Models\UserModel;
 use Faker\Factory as Faker;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -244,11 +245,7 @@ class ZoomRepository
                 "group_number" => $lection_group,
                 "duration" => $join_leave_item["duration"],
             ]);
-
-
         }
-
-
     }
 
     private function getLectionGroup(array $join_leave_data, $lection)
@@ -266,39 +263,92 @@ class ZoomRepository
         return 0;
     }
 
-    public function createMeeing(\App\Models\TrainingModel $training)
+    public function createMeeting($training)
     {
-        $client = new \GuzzleHttp\Client(['base_uri' => 'https://api.zoom.us',
-        ]);
+        $accessToken = $this->getZoomAccessToken();
+        $traning_date_time = $training->start_at . " " . $training->start_at_time;
+        $date_time = new \DateTime($traning_date_time);
+        $start_time = $date_time->format('Y-m-d\TH:i:s\Z');
 
+        $apiEndpoint = 'https://api.zoom.us/v2/users/me/meetings'; // Replace with your user ID or 'me' for the authenticated user
 
-        $end_time = $training->end_at . " " . $training->end_at_time;
-        $date = new DateTime();
-        $date->setTimestamp($end_time);
-        $formattedDate = $date->format('Y-m-d\TH:i:s\Z');
-
-        $response = $client->request('POST', '/v2/users/me/meetings', [
-            "headers" => [
-                "Authorization" => "Bearer " . $this->getZoomAccessToken(),
-//                "Content-Type" => "multipart/form-data",
-
+        $meetingData = [
+            'topic' => $training->name,
+            'type' => 2, // 2 for scheduled meeting
+            'start_time' => $start_time, // Replace with your desired start time
+            'duration' => 120, // Meeting duration in minutes
+            'settings' => [
+                'join_before_host' => false,
+                'registration_type' => 2, // 2 for registration required
+                'approval_type' => 1, // 2 for automatic approval
+//                'waiting_room' => false
             ],
+        ];
 
-            'json' => [
-                'agenda' => $training->name,
-                'default_password' => true,
-                'password ' => "",
-                'pre_schedule ' => false,
-                'recurrence' => [
-                    "end_date_time" => $formattedDate,
-                ]
+        $client = new Client();
 
-            ]
+        $response = $client->request('POST', $apiEndpoint, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $meetingData,
         ]);
 
-        $data = json_decode($response->getBody());
-        $meeting_url = isset($data->join_url) ? $data->join_url : '';
-        return $meeting_url;
+        $meetingInfo = json_decode($response->getBody(), true);
+
+        return $meetingInfo;
     }
 
+
+    public function updateMeeging($training)
+    {
+        $accessToken = $this->getZoomAccessToken();
+
+        $meetingId = $training->zoom_conference_id;
+        $apiEndpoint = "https://api.zoom.us/v2/meetings/$meetingId";
+
+        $meetingData = [
+            'topic' => $training->name, // Replace with the new meeting name
+        ];
+
+        $client = new Client();
+
+        $response = $client->request('PATCH', $apiEndpoint, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $meetingData,
+        ]);
+
+
+        $updatedMeetingInfo = json_decode($response->getBody(), true);
+
+        print_r($updatedMeetingInfo);
+    }
+
+
+    public function deleteMeeting($training)
+    {
+        $accessToken = $this->getZoomAccessToken();
+
+        $meetingId = $training->zoom_conference_id;
+        $apiEndpoint = "https://api.zoom.us/v2/meetings/$meetingId";
+
+        $client = new Client();
+
+        $response = $client->request('DELETE', $apiEndpoint, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        ]);
+
+// Check the response status code to confirm deletion
+        if ($response->getStatusCode() === 204) {
+            echo 'Meeting deleted successfully.';
+        } else {
+            echo 'Failed to delete the meeting.';
+        }
+    }
 }

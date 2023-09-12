@@ -65,7 +65,7 @@
                     <div class="form-group nk-datapk-ctm form-elet-mg date_normal" id="data_1">
                         <div class="input-group date nk-int-st">
                             <span class="input-group-addon"></span>
-                            <input type="text" class="form-control" name="start_at" required="" value="">
+                            <input type="text" class="form-control" name="start_at" required="" readonly value="">
                         </div>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                     <div class="form-group nk-datapk-ctm form-elet-mg date_normal" id="data_1">
                         <div class="input-group date nk-int-st">
                             <span class="input-group-addon"></span>
-                            <input type="text" class="form-control" name="end_at" required="" value="">
+                            <input type="text" class="form-control" name="end_at" readonly required="" value="">
                         </div>
                     </div>
                 </div>

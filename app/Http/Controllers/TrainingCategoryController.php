@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Acme\WEB\Repositories\TrainingCategoryRepository;
+use Acme\WEB\Repositories\ZoomRepository;
 use App\DataTables\TrainingCategoryDataTable;
 use App\Helpers\EaseEncrypt;
 use App\Models\MemberGroupModel;
@@ -53,6 +54,7 @@ class TrainingCategoryController extends BaseController
     public function store()
     {
         $training_category = $this->training_categoryRepo->createNewTrainingCategory();
+
 
         return Response::json($training_category);
     }

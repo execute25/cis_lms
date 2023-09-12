@@ -41,8 +41,11 @@ class TrainingCategoryRepository
             $data
         );
 
-        if (Request::filled("include_groups"))
+        if (Request::filled("include_groups")) {
             $query->include_groups = implode(",", Request::get("include_groups"));
+        } else {
+            $query->include_groups = "";
+        }
 
 
         $query->save();
@@ -62,8 +65,11 @@ class TrainingCategoryRepository
         $data = array_filter(Request::all());
         $query->fill($data);
 
-        if (Request::filled("include_groups"))
+        if (Request::filled("include_groups")) {
             $query->include_groups = implode(",", Request::get("include_groups"));
+        } else {
+            $query->include_groups = "";
+        }
 
 
         $query->save();

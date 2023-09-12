@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 
@@ -62,31 +63,32 @@ class ZoomController extends Controller
     }
 
 
+
     public function zoom_webhook()
     {
 
-        $payload = Input::get("payload");
+        $payload = Request::get("payload");
 
 //Log::info(json_encode([
 //"plainToken" => $payload["plainToken"],
 //"encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "DG2y4CttRsOO4IwZhyikaQ")]));
 
 
-//return Response::json([
-//"plainToken" => $payload["plainToken"],
-//"encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "6S7gqY5US4i-iQhyaJJy-g")
-//]);
+        return Response::json([
+            "plainToken" => $payload["plainToken"],
+            "encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "iaCdUEVOSvWOzKY07GrnpQ")
+        ]);
 
 
-        $event = Input::get("event");
+        $event = Request::get("event");
 
 
         Log::info("Start");
         Log::info($event);
-        Log::info(json_encode(Input::all()));
+        Log::info(json_encode(Request::all()));
 
         if ($event == "meeting.ended") {
-            $payload = Input::get("payload");
+            $payload = Request::get("payload");
 
 //            if (isset($payload->object->id)) {
             if (isset($payload['object']['id'])) {
@@ -109,6 +111,7 @@ class ZoomController extends Controller
 
         return "";
     }
+
 
 
 }

@@ -50,7 +50,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'App\Http\Controllers\HomeController@main_page');
 });
 
-Route::get('redirect_zoom', 'ZoomController@redirect_zoom');
+Route::get('redirect_zoom', 'App\Http\Controllers\ZoomController@redirect_zoom');
+Route::any('zoom_webhook', 'App\Http\Controllers\ZoomController@zoom_webhook');
 
 
 Auth::routes(['register' => false]);
