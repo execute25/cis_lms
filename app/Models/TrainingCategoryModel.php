@@ -19,4 +19,9 @@ class TrainingCategoryModel extends Model
     );
 
 
+    public function membergroups()
+    {
+        return $this->belongsToMany(MemberGroupModel::class, 'training_category_membergroup', 'training_category_id', 'member_group_id');
+    }
+
 }

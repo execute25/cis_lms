@@ -119,4 +119,15 @@ class TrainingController extends BaseController
     }
 
 
+    public function upcoming_trainings()
+    {
+        $trainings = $this->trainingRepo->getUpcomingTrainings();
+
+        $this->layout->content = View::make('web.training.upcoming_trainings', [
+        ]);
+//        return Response::json($trainings);
+
+    }
+
+
 }

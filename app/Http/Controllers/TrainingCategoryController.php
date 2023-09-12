@@ -63,7 +63,8 @@ class TrainingCategoryController extends BaseController
     {
         $training_category = $this->training_categoryRepo->getTrainingCategoryById($id);
         $member_groups = MemberGroupModel::get();
-        $selected_groups = explode(",", $training_category->include_groups);
+        $selected_groups = $this->training_categoryRepo->getSelectedMemberGroups($training_category);
+
         $this->layout->content = View::make('admin.training_category.edit', [
             'training_category' => $training_category,
             'member_groups' => $member_groups,
