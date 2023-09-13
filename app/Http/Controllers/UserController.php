@@ -6,24 +6,19 @@ use Acme\WEB\Repositories\UserRepository;
 use App\DataTables\UserDataTable;
 use App\Helpers\EaseEncrypt;
 use App\Http\Requests\User\CellStore;
-use App\Http\Requests\User\UserStore;
 use App\Http\Requests\User\CellUpdate;
+use App\Http\Requests\User\UserStore;
 use App\Models\CellUserModel;
 use App\Models\LoveCardModel;
 use App\Models\UserModel;
-use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use function abort;
-use function iconv;
 use function redirect;
 
 class UserController extends BaseController

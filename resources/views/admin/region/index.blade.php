@@ -5,19 +5,24 @@
 @section('content')
     @parent
 
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
+                    <section class="panel">
+                        <header class="panel-heading">
+                        </header>
 
-    <div class="col-md-12">
-        <section class="panel">
-            <header class="panel-heading">
-            </header>
+                        <div class="table-responsive">
+                            {!! $dataTable->table(["class" => "stripe"]) !!}
+                        </div>
 
-            <div class="table-responsive">
-                {!! $dataTable->table(["class" => "stripe"]) !!}
+                    </section>
+
+
+                </div>
             </div>
-
-        </section>
-
-
+        </div>
     </div>
 @stop
 

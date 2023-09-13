@@ -5,22 +5,15 @@ namespace App\Http\Controllers;
 use Acme\WEB\Repositories\TrainingRepository;
 use Acme\WEB\Repositories\ZoomRepository;
 use App\DataTables\TrainingDataTable;
-use App\Helpers\EaseEncrypt;
-use App\Models\MemberGroupModel;
 use App\Models\TrainingCategoryModel;
 use App\Models\TrainingModel;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use function abort;
-use function iconv;
-use function redirect;
 
 class TrainingController extends BaseController
 {
@@ -88,11 +81,15 @@ class TrainingController extends BaseController
 
     public function update($id)
     {
-        $training = $this->trainingRepo->updateTraining($id);
+        $training = $this->trainingRepo->getTrainingById($id);
 
-        if ($training->is_use_zoom == 1) {
+
+        if ($training->is_use_zoom == 1 && $training->name != Request::get("name")) {
             $this->zoomRepository->updateMeeging($training);
         }
+
+        $training = $this->trainingRepo->updateTraining($training);
+
 
         return Response::json($training);
     }
@@ -123,9 +120,45 @@ class TrainingController extends BaseController
     {
         $trainings = $this->trainingRepo->getUpcomingTrainings();
 
+
         $this->layout->content = View::make('web.training.upcoming_trainings', [
+            "trainings" => $trainings
         ]);
-//        return Response::json($trainings);
+
+    }
+
+    public function get_zoom_join_link($id)
+    {
+        $training = $this->trainingRepo->getTrainingById($id);
+
+        if ($training->is_use_zoom == 0)
+            return Response::make("", 411);
+
+
+        $user_training = $this->trainingRepo->getUserTraining($id);
+
+        if ($user_training->join_zoom_link == "") {
+
+            if ($training->zoom_conference_id == "")
+                return Response::make("Zoom conference ID empty", 412);
+
+            $user_training->join_zoom_link = $this->zoomRepository->makeTrainingJoinZoomLink($training);
+            $user_training->save();
+        }
+
+        return Response::json($user_training);
+
+
+    }
+
+
+    public function show_video($id)
+    {
+        $training = $this->trainingRepo->getTrainingByIdWith($id);
+
+        $this->layout->content = View::make('web.training.show_video', [
+            "training" => $training
+        ]);
 
     }
 

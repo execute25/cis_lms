@@ -1,0 +1,16 @@
+{
+    "Connect to a lecture via Zoom": "Подключиться к обучению через Zoom",
+    "Go to lecture replay": "Перейти к повтору лекции",
+    "The online lecture has not started yet": "Онлайн лекция пока не началась",
+    "Date": "Дата",
+    "Loading": "Загрузка",
+    "Close": "Закрыть",
+    "An error occurred while starting the lecture. Contact your administrator": "Произошла ошибка при запуске лекции. Обратитесь к администратору",
+    "Sun": "вс",
+    "Mon": "пн",
+    "Tue": "вт",
+    "Wed": "ср",
+    "Thu": "чт",
+    "Fri": "пт",
+    "Sat": "сб"
+}

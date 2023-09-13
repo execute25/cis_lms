@@ -4,20 +4,11 @@ namespace App\Http\Controllers;
 
 use Acme\WEB\Repositories\RegionRepository;
 use App\DataTables\RegionDataTable;
-use App\Helpers\EaseEncrypt;
 use App\Models\RegionModel;
-use Exception;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use function abort;
-use function iconv;
-use function redirect;
 
 class RegionController extends BaseController
 {

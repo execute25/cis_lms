@@ -27,10 +27,21 @@
 }
 
 
-.main_middle_content {
-    height: 65vh;
-}
+/*.main_middle_content {*/
+/*    height: 65vh;*/
+/*}*/
 
 .container {
     width: 100%;
+}
+
+.lection_article {
+    border: 1px solid #e9e4e4;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* Apply a shadow effect */
+}
+
+.training_btn_block .btn{
+    white-space: inherit;
 }

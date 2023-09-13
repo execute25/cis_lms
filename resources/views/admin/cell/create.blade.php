@@ -1,55 +1,68 @@
 @section('content')
     @parent
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
 
-    <form id="form" action="/admin/cell" method="POST" data-validate="parsley">
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="nk-int-mk  mg-t-10">
-                <h5>Name</h5>
-            </div>
-            <div class="form-group ic-cmp-int">
-                <div class="form-ic-cmp">
-                    <i class="glyphicon glyphicon-equalizer"></i>
+                    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+                          rel="stylesheet"/>
+
+                    <form id="form" action="/admin/cell" method="POST" data-validate="parsley">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Name</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-equalizer"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text" name="name" required="" class="form-control"
+                                           placeholder="Name input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+                            <div class="nk-int-mk">
+                                <h5>Region</h5>
+                            </div>
+                            <div class="chosen-select-act fm-cmp-mg">
+                                <select class="chosen" name="region_id" required="" style="width:200px;"/>
+                                <option value=""></option>
+                                @foreach($regions as $region)
+                                    <option value="{{{$region->id}}}">{{{$region->name}}}</option>
+                                    @endforeach
+                                    </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+                            <div class="nk-int-mk">
+                                <h5>Leader of cell</h5>
+                            </div>
+                            <div class="chosen-select-act fm-cmp-mg">
+                                <select name="leader_id" id="" class="select2 form-control leader_id" required=""
+                                        style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+
+                        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>User Create</button>
+
+                    </form>
+
                 </div>
-                <div class="nk-int-st">
-                    <input type="text" name="name" required="" class="form-control" placeholder="Name input">
-                </div>
             </div>
         </div>
-
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
-            <div class="nk-int-mk">
-                <h5>Region</h5>
-            </div>
-            <div class="chosen-select-act fm-cmp-mg">
-                <select class="chosen" name="region_id" required="" style="width:200px;"/>
-                <option value=""></option>
-                @foreach($regions as $region)
-                    <option value="{{{$region->id}}}">{{{$region->name}}}</option>
-                    @endforeach
-                    </select>
-            </div>
-        </div>
-
-
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
-            <div class="nk-int-mk">
-                <h5>Leader of cell</h5>
-            </div>
-            <div class="chosen-select-act fm-cmp-mg">
-                <select name="leader_id" id="" class="select2 form-control leader_id" required=""
-                        style="width: 100%;">
-                </select>
-            </div>
-        </div>
-
-
-        <div class="clearfix"></div>
-
-        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>User Create</button>
-
-    </form>
+    </div>
 
 @stop
 

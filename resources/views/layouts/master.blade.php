@@ -147,7 +147,7 @@
 
                         @role(['super-admin'])
                         <li class="nav-item nc-al">
-                            <a href="/admin/setting/change_setting"  role="button"
+                            <a href="/admin/setting/change_setting" role="button"
                                aria-expanded="false" class="nav-link dropdown-toggle"><span><i
                                         class="notika-icon notika-settings"></i></span>
                             </a>
@@ -187,9 +187,9 @@
                                     <li><a href="widgets.html">Widgets</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#demoevent" href="#">Email</a>
+                            <li><a data-toggle="collapse" data-target="#demoevent" href="#">Обучения</a>
                                 <ul id="demoevent" class="collapse dropdown-header-top">
-                                    <li><a href="inbox.html">Inbox</a></li>
+                                    <li><a href="inbox.html">Продстоящие обучения</a></li>
                                     <li><a href="view-email.html">View Email</a></li>
                                     <li><a href="compose-email.html">Compose Email</a></li>
                                 </ul>
@@ -221,7 +221,7 @@
                     <li class="active"><a data-toggle="tab" href="#Home"><i class="notika-icon notika-house"></i>
                             Admin Panel</a>
                     </li>
-                    <li><a data-toggle="tab" href="#mailbox"><i class="notika-icon notika-mail"></i> Email</a>
+                    <li><a data-toggle="tab" href="#mailbox"><i class="notika-icon notika-mail"></i> Обучения</a>
                     </li>
                     <li><a data-toggle="tab" href="#Interface"><i class="notika-icon notika-edit"></i> Interface</a>
                     </li>
@@ -246,7 +246,7 @@
 
                     <div id="mailbox" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="inbox.html">Inbox</a>
+                            <li><a href="/web/training/upcoming_trainings">Продстоящие обучения</a>
                             </li>
                             <li><a href="view-email.html">View Email</a>
                             </li>
@@ -273,10 +273,10 @@
 
 <!-- Start Sale Statistic area-->
 <div class="sale-statistic-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sale-statistic-inner notika-shadow main_middle_content">
+{{--    <div class="container">--}}
+{{--        <div class="row">--}}
+{{--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">--}}
+{{--                <div class="sale-statistic-inner notika-shadow main_middle_content">--}}
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     @section('content')
 
@@ -288,10 +288,10 @@
                     {{--                            <p>Vestibulum purus quam scelerisque, mollis nonummy metus</p>--}}
                     {{--                        </div>--}}
                     {{--                    </div>--}}
-                </div>
-            </div>
-        </div>
-    </div>
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 </div>
 <!-- End Sale Statistic area-->
 

@@ -7,20 +7,13 @@ use Acme\WEB\Repositories\NoticeRepository;
 use Acme\WEB\Repositories\ZoomRepository;
 use App\DataTables\NoticeDataTable;
 use App\Helpers\EaseDataTable;
-use App\Models\CourseModel;
 use App\Models\LectionModel;
 use App\Models\LectionStartEndTimeModel;
-use App\Models\SettingModel;
-use App\Models\UserModel;
+use App\Models\TrainingModel;
 use App\Models\ZoomLectionDataModel;
-use App\Models\ZoomMeetingLogModel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\View;
 
 class ZoomController extends Controller
 {
@@ -74,10 +67,10 @@ class ZoomController extends Controller
 //"encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "DG2y4CttRsOO4IwZhyikaQ")]));
 
 
-        return Response::json([
-            "plainToken" => $payload["plainToken"],
-            "encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "iaCdUEVOSvWOzKY07GrnpQ")
-        ]);
+//        return Response::json([
+//            "plainToken" => $payload["plainToken"],
+//            "encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "iaCdUEVOSvWOzKY07GrnpQ")
+//        ]);
 
 
         $event = Request::get("event");
@@ -92,7 +85,7 @@ class ZoomController extends Controller
 
 //            if (isset($payload->object->id)) {
             if (isset($payload['object']['id'])) {
-                $allow_meeting_ids = CourseModel::where("zoom_link", "!=", "")->pluck("zoom_link")->toArray();
+                $allow_meeting_ids = TrainingModel::where("zoom_conference_id", "!=", "")->pluck("zoom_conference_id")->toArray();
                 $meeting_id = $payload['object']['id'];
                 if (!in_array($meeting_id, $allow_meeting_ids)) {
                     Log::info("Meeting id not allow " . $meeting_id);

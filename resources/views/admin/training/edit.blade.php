@@ -201,6 +201,10 @@
 
 @section('app-js')
     @parent
+    <script src="/src/js/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/src/js/datapicker/datepicker-active.js"></script>
+
+
     <script src="/src/js/parsley/parsley.new.js"></script>
     <script src="/src/js/load-image/load-image.min.js"></script>
 @stop

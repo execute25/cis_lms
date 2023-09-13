@@ -6,18 +6,23 @@
     @parent
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 
-    <div class="col-md-12">
-        <section class="panel">
-            <header class="panel-heading">
-            </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
 
-            <div class="table-responsive">
-                {!! $dataTable->table(["class" => "stripe"]) !!}
+                    <section class="panel">
+                        <header class="panel-heading">
+                        </header>
+
+                        <div class="table-responsive">
+                            {!! $dataTable->table(["class" => "stripe"]) !!}
+                        </div>
+
+                    </section>
+                </div>
             </div>
-
-        </section>
-
-
+        </div>
     </div>
 
     <div class="modal fade" id="member_modal" role="dialog" style="display: none;">

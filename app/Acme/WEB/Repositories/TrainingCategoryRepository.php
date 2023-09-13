@@ -2,19 +2,9 @@
 
 namespace Acme\WEB\Repositories;
 
-use App\Helpers\EaseEncrypt;
-use App\Helpers\EaseUpload;
-use App\Models\CellModel;
-use App\Models\RegionModel;
+use App\Models\TrainingCategoryMemberGroupModel;
 use App\Models\TrainingCategoryModel;
-use App\Models\UserModel;
-use Faker\Factory as Faker;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
-use Spatie\Permission\Models\Role;
 
 class TrainingCategoryRepository
 {
@@ -65,16 +55,25 @@ class TrainingCategoryRepository
         $data = array_filter(Request::all());
         $query->fill($data);
 
-        if (Request::filled("include_groups")) {
-            $query->include_groups = implode(",", Request::get("include_groups"));
-        } else {
-            $query->include_groups = "";
-        }
-
 
         $query->save();
 
+        if (Request::filled("include_groups")) {
+            $query->membergroups()->sync(Request::get("include_groups"));
+        } else {
+            $query->membergroups()->sync([]);
+        }
+
+
         return $query;
+    }
+
+    public function getSelectedMemberGroups($training_category)
+    {
+        return TrainingCategoryMemberGroupModel::
+        where("training_category_id", $training_category->id)
+            ->pluck("member_group_id")
+            ->toArray();
     }
 
 

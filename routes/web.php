@@ -46,6 +46,13 @@ Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
 });
 
 
+Route::group(['middleware' => ['auth'], 'prefix' => '/web'], function () {
+    Route::get('/training/upcoming_trainings', 'App\Http\Controllers\TrainingController@upcoming_trainings');
+    Route::get('/training/{id}/get_zoom_join_link', 'App\Http\Controllers\TrainingController@get_zoom_join_link');
+    Route::get('/training/{id}/show_video', 'App\Http\Controllers\TrainingController@show_video');
+});
+
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'App\Http\Controllers\HomeController@main_page');
 });
