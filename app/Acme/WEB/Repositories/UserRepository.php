@@ -34,6 +34,7 @@ class UserRepository
 
     public function createNewUser()
     {
+
         $user = new UserModel(
             Request::all()
         );

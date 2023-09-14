@@ -1,29 +1,41 @@
 @section('content')
     @parent
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
 
-    <form id="form" action="/admin/membergroup" method="POST" data-validate="parsley">
+                    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+                          rel="stylesheet"/>
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="nk-int-mk  mg-t-10">
-                <h5>Name</h5>
-            </div>
-            <div class="form-group ic-cmp-int">
-                <div class="form-ic-cmp">
-                    <i class="glyphicon glyphicon-equalizer"></i>
-                </div>
-                <div class="nk-int-st">
-                    <input type="text" name="name" required="" class="form-control" placeholder="Name input">
+                    <form id="form" action="/admin/membergroup" method="POST" data-validate="parsley">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Name</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-equalizer"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text" name="name" required="" class="form-control"
+                                           placeholder="Name input">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+
+                        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>User Create</button>
+
+                    </form>
+
                 </div>
             </div>
         </div>
-
-
-        <div class="clearfix"></div>
-
-        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>User Create</button>
-
-    </form>
+    </div>
 
 @stop
 

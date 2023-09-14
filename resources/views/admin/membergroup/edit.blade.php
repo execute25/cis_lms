@@ -1,30 +1,42 @@
 @section('content')
     @parent
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+                    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+                          rel="stylesheet"/>
 
-    <form id="form" action="/admin/membergroup/{{{ $membergroup->id }}}" method="POST" data-validate="parsley">
+                    <form id="form" action="/admin/membergroup/{{{ $membergroup->id }}}" method="POST"
+                          data-validate="parsley">
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="nk-int-mk  mg-t-10">
-                <h5>Name</h5>
-            </div>
-            <div class="form-group ic-cmp-int">
-                <div class="form-ic-cmp">
-                    <i class="glyphicon glyphicon-equalizer"></i>
-                </div>
-                <div class="nk-int-st">
-                    <input type="text" name="name" value="{{$membergroup->name}}" required="" class="form-control"
-                           placeholder="Name input">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Name</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-equalizer"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text" name="name" value="{{$membergroup->name}}" required=""
+                                           class="form-control"
+                                           placeholder="Name input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Update</button>
+
+                    </form>
+
                 </div>
             </div>
         </div>
-
-        <div class="clearfix"></div>
-
-        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Update</button>
-
-    </form>
+    </div>
 
 @stop
 
@@ -72,7 +84,6 @@
                     });
                 }
             });
-
 
 
         });

@@ -10,7 +10,6 @@ class SettingRepository
 
     public function __construct()
     {
-        $this->options = json_decode($this->options);
     }
 
     public function createNewSetting()

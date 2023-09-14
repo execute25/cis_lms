@@ -1,39 +1,53 @@
 @section('content')
     @parent
-    <form id="form" action="/admin/region" method="POST" data-validate="parsley">
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="nk-int-mk  mg-t-10">
-                <h5>Name</h5>
-            </div>
-            <div class="form-group ic-cmp-int">
-                <div class="form-ic-cmp">
-                    <i class="glyphicon glyphicon-equalizer"></i>
-                </div>
-                <div class="nk-int-st">
-                    <input type="text" name="name" required="" class="form-control" placeholder="Name input">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
+
+
+                    <form id="form" action="/admin/region" method="POST" data-validate="parsley">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Name</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-equalizer"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text" name="name" required="" class="form-control"
+                                           placeholder="Name input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Korean Name</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-equalizer"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text" name="korean_name" class="form-control"
+                                           placeholder="Korean Name input">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Create</button>
+
+                    </form>
+
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="nk-int-mk  mg-t-10">
-                <h5>Korean Name</h5>
-            </div>
-            <div class="form-group ic-cmp-int">
-                <div class="form-ic-cmp">
-                    <i class="glyphicon glyphicon-equalizer"></i>
-                </div>
-                <div class="nk-int-st">
-                    <input type="text" name="korean_name" class="form-control" placeholder="Korean Name input">
-                </div>
-            </div>
-        </div>
-
-
-        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Create</button>
-
-    </form>
+    </div>
 
 @stop
 
