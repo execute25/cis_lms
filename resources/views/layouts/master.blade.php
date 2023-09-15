@@ -77,6 +77,7 @@
     <!-- style CSS
     ============================================ -->
     <link rel="stylesheet" href="/src/css/custom.css">
+    <link rel="stylesheet" href="/src/css/media.css">
 
 </head>
 
@@ -98,52 +99,52 @@
                 <div class="header-top-menu">
                     <ul class="nav navbar-nav notika-top-nav">
 
-                        <li class="nav-item nc-al">
-                            <a href="#" data-toggle="dropdown" role="button"
-                               aria-expanded="false" class="nav-link dropdown-toggle"><span><i
-                                        class="notika-icon notika-alarm"></i></span>
-                            </a>
-                            <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">
-                                <div class="hd-mg-tt">
-                                    <h2>Notification</h2>
-                                </div>
-                                <div class="hd-message-info">
-                                    <a href="#">
-                                        <div class="hd-message-sn">
-                                            <div class="hd-message-img">
-                                                <img src="/src/img/post/1.jpg" alt=""/>
-                                            </div>
-                                            <div class="hd-mg-ctn">
-                                                <h3>David Belle</h3>
-                                                <p>Cum sociis natoque penatibus et magnis dis parturient montes</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="hd-message-sn">
-                                            <div class="hd-message-img">
-                                                <img src="/src/img/post/2.jpg" alt=""/>
-                                            </div>
-                                            <div class="hd-mg-ctn">
-                                                <h3>Jonathan Morris</h3>
-                                                <p>Cum sociis natoque penatibus et magnis dis parturient montes</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="hd-mg-va">
-                                    <a href="#">View All</a>
-                                </div>
-                            </div>
-                        </li>
+                        {{--                        <li class="nav-item nc-al">--}}
+                        {{--                            <a href="#" data-toggle="dropdown" role="button"--}}
+                        {{--                               aria-expanded="false" class="nav-link dropdown-toggle"><span><i--}}
+                        {{--                                        class="notika-icon notika-alarm"></i></span>--}}
+                        {{--                            </a>--}}
+                        {{--                            <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">--}}
+                        {{--                                <div class="hd-mg-tt">--}}
+                        {{--                                    <h2>Notification</h2>--}}
+                        {{--                                </div>--}}
+                        {{--                                <div class="hd-message-info">--}}
+                        {{--                                    <a href="#">--}}
+                        {{--                                        <div class="hd-message-sn">--}}
+                        {{--                                            <div class="hd-message-img">--}}
+                        {{--                                                <img src="/src/img/post/1.jpg" alt=""/>--}}
+                        {{--                                            </div>--}}
+                        {{--                                            <div class="hd-mg-ctn">--}}
+                        {{--                                                <h3>David Belle</h3>--}}
+                        {{--                                                <p>Cum sociis natoque penatibus et magnis dis parturient montes</p>--}}
+                        {{--                                            </div>--}}
+                        {{--                                        </div>--}}
+                        {{--                                    </a>--}}
+                        {{--                                    <a href="#">--}}
+                        {{--                                        <div class="hd-message-sn">--}}
+                        {{--                                            <div class="hd-message-img">--}}
+                        {{--                                                <img src="/src/img/post/2.jpg" alt=""/>--}}
+                        {{--                                            </div>--}}
+                        {{--                                            <div class="hd-mg-ctn">--}}
+                        {{--                                                <h3>Jonathan Morris</h3>--}}
+                        {{--                                                <p>Cum sociis natoque penatibus et magnis dis parturient montes</p>--}}
+                        {{--                                            </div>--}}
+                        {{--                                        </div>--}}
+                        {{--                                    </a>--}}
+                        {{--                                </div>--}}
+                        {{--                                <div class="hd-mg-va">--}}
+                        {{--                                    <a href="#">View All</a>--}}
+                        {{--                                </div>--}}
+                        {{--                            </div>--}}
+                        {{--                        </li>--}}
 
-                        <li class="nav-item">
-                            <a href="#" data-toggle="dropdown" role="button" aria-expanded="false"
-                               class="nav-link dropdown-toggle">
-                                <div class="spinner4 spinner-4"></div>
-                                <div class="ntd-ctn"><span>2</span></div>
-                            </a>
-                        </li>
+                        {{--                        <li class="nav-item">--}}
+                        {{--                            <a href="#" data-toggle="dropdown" role="button" aria-expanded="false"--}}
+                        {{--                               class="nav-link dropdown-toggle">--}}
+                        {{--                                <div class="spinner4 spinner-4"></div>--}}
+                        {{--                                <div class="ntd-ctn"><span>2</span></div>--}}
+                        {{--                            </a>--}}
+                        {{--                        </li>--}}
 
                         @role(['super-admin'])
                         <li class="nav-item nc-al">
@@ -213,7 +214,7 @@
 </div>
 <!-- Mobile Menu end -->
 <!-- Main Menu area start-->
-<div class="main-menu-area mg-tb-40">
+<div class="main-menu-area mg-tb-15">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -273,25 +274,25 @@
 
 <!-- Start Sale Statistic area-->
 <div class="sale-statistic-area">
-{{--    <div class="container">--}}
-{{--        <div class="row">--}}
-{{--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">--}}
-{{--                <div class="sale-statistic-inner notika-shadow main_middle_content">--}}
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    @section('content')
+    {{--    <div class="container">--}}
+    {{--        <div class="row">--}}
+    {{--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">--}}
+    {{--                <div class="sale-statistic-inner notika-shadow main_middle_content">--}}
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    @section('content')
 
-                    @show
+    @show
 
-                    {{--                    <div class="curved-inner-pro">--}}
-                    {{--                        <div class="curved-ctn">--}}
-                    {{--                            <h2>Sales Statistics</h2>--}}
-                    {{--                            <p>Vestibulum purus quam scelerisque, mollis nonummy metus</p>--}}
-                    {{--                        </div>--}}
-                    {{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--                    <div class="curved-inner-pro">--}}
+    {{--                        <div class="curved-ctn">--}}
+    {{--                            <h2>Sales Statistics</h2>--}}
+    {{--                            <p>Vestibulum purus quam scelerisque, mollis nonummy metus</p>--}}
+    {{--                        </div>--}}
+    {{--                    </div>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 </div>
 <!-- End Sale Statistic area-->
 
@@ -350,6 +351,11 @@
 
     <!-- plugins JS
     ============================================ -->
+
+
+
+    <script src="/src/js/easypiechart/jquery.easy-pie-chart.js"></script>
+
     <script src="/src/js/plugins.js"></script>
     <!--  Chat JS
         ============================================ -->
@@ -368,6 +374,40 @@
 @section('inline-js')
 
 @show
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.6/jstz.min.js"></script>
+
+<script>
+    @if(Auth::check())
+    document.addEventListener('DOMContentLoaded', function () {
+        var saved_timezone = "{{Auth::user()->timezone}}";
+        var current_timezone = jstz.determine();
+        var current_timezone = current_timezone.name();
+        console.log("saved_timezone " + saved_timezone)
+        console.log("current_timezone " + current_timezone)
+
+        if (saved_timezone == current_timezone)
+            return;
+
+        $.ajax({
+            url: '/web/user/update_timezone',
+            data: {
+                timezone: current_timezone
+            },
+            method: "POST",
+            success: function (data) {
+
+
+            },
+            error: function (error) {
+                console.log(error['responseText'])
+            },
+        });
+
+    });
+
+    @endif
+</script>
 
 </body>
 

@@ -50,6 +50,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => '/web'], function () {
     Route::get('/training/upcoming_trainings', 'App\Http\Controllers\TrainingController@upcoming_trainings');
     Route::get('/training/{id}/get_zoom_join_link', 'App\Http\Controllers\TrainingController@get_zoom_join_link');
     Route::get('/training/{id}/show_video', 'App\Http\Controllers\TrainingController@show_video');
+    Route::post('/training/{id}/update_watch_point', 'App\Http\Controllers\TrainingController@update_watch_point');
+    Route::post('/training/{id}/finish_lection', 'App\Http\Controllers\TrainingController@finish_lection');
+
+
+    Route::post('/user/update_timezone', 'App\Http\Controllers\UserController@update_timezone');
 });
 
 

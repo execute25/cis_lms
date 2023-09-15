@@ -195,7 +195,7 @@ class ZoomRepository
 
     }
 
-    private function meetingJoinLeaveDataHandler(array $join_leave_data, $lection)
+    private function meetingJoinLeaveDataHandler(array $join_leave_data, $training)
     {
         if (count($join_leave_data) == 0)
             return;
@@ -203,8 +203,18 @@ class ZoomRepository
 //        $lection_group = $this->getLectionGroup($join_leave_data, $lection);
 
         foreach ($join_leave_data as $join_leave_item) {
+
+            $pattern = '/(\d+)@/';
             $email = $join_leave_item["email"];
-            $user = UserModel::where("zoom_email", $email)->where("admin_level", 50)->first();
+
+            if (preg_match($pattern, $email, $matches1)) {
+                $user_id = $matches1[1];
+                $user = UserModel::find($user_id);
+            } else {
+                $user = null;
+            }
+
+//            $user = UserModel::where("zoom_email", $email)->where("admin_level", 50)->first();
             if (!$user)
                 continue;
 
@@ -212,7 +222,7 @@ class ZoomRepository
             $norm_leave_time = date("Y-m-d H:i:s", strtotime($join_leave_item["leave_time"]));
 
             $zoom_data = ZoomTrainingDataModel::where("user_id", $user->id)
-                ->where("lection_id", $lection->id)
+                ->where("training_id", $training->id)
                 ->where("join_time", $norm_join_time)->first();
 
             if ($zoom_data)
@@ -220,7 +230,7 @@ class ZoomRepository
 
             ZoomTrainingDataModel::create([
                 "user_id" => $user->id,
-                "lection_id" => $lection->id,
+                "training_id" => $training->id,
                 "join_time" => $norm_join_time,
                 "leave_time" => $norm_leave_time,
                 "duration" => $join_leave_item["duration"],

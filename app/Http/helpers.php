@@ -10,7 +10,7 @@ function isLessonNotStartYet($training): bool
 
 function isLessonInProgress($training): bool
 {
-    if (($training->end_at . " " . $training->end_at_time) > date("Y-m-d H:i", time()) && ($training->start_at . " " . $training->start_at_time) < date("Y-m-d H:i", time()))
+    if (($training->end_at . " " . $training->end_at_time) >= date("Y-m-d H:i", time()) && ($training->start_at . " " . $training->start_at_time) <= date("Y-m-d H:i", time()))
         return true;
 
     return false;
@@ -27,4 +27,22 @@ function normalizeDate($date): string
     $day = Lang::get($norm_date);
 
     return date('Y-m-d', strtotime($date)) . '(' . $day . ') ' . date('H:i', strtotime($date));
+}
+
+function getRemindTime($date)
+{
+    $desiredDate = \Carbon\Carbon::parse($date);
+    $currentDate = \Carbon\Carbon::now();
+    $timeRemaining = $currentDate->diffForHumans($desiredDate);
+
+    return Lang::get("Remind:") . " $timeRemaining  " . Lang::get("the start of the lecture");
+}
+
+function dateTolocal($date, $format = "Y-m-d H:i:s")
+{
+    $userTimezone = Auth::user()->timezone;
+    $timestamp = \Carbon\Carbon::parse($date, 'Asia/Seoul'); // Adjust the timestamp and timezone accordingly
+    $timestamp->setTimezone($userTimezone);
+
+    return $timestamp->format($format);
 }

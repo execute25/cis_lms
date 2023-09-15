@@ -253,4 +253,12 @@ class UserController extends BaseController
 
     }
 
+
+    public function update_timezone()
+    {
+        $user = UserModel::find(Auth::user()->id);
+        $user->timezone = Request::get("timezone");
+        $user->save();
+    }
+
 }

@@ -12,5 +12,8 @@
     "Wed": "ср",
     "Thu": "чт",
     "Fri": "пт",
-    "Sat": "сб"
+    "Sat": "сб",
+    "Remind:": "Осталось:",
+    "the start of the lecture": "начала лекции",
+    "Upcoming lectures": "Предстоящие лекции"
 }

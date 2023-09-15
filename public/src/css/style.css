@@ -91,6 +91,11 @@ body {}
 .mg-tb-30{
 	margin:30px 0px;
 }
+.mg-tb-15{
+    margin:15px 0px;
+}
+
+
 .mg-t-30{
 	margin-top:30px;
 }
@@ -3347,73 +3352,9 @@ textarea.auto-size {
 	box-shadow:none;
 	border-radius:0px;
 }
-.datepicker {
-    padding: 0px;
-    border-radius: 0px;
-}
-.datepicker.dropdown-menu{
-    border: 0px solid #ccc;
-    border: 0px solid rgba(0, 0, 0, 0.2);
-    border-radius: 0px;
-    color: #333;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-	width: 300px;
-}
-.datepicker-days  .table-condensed thead tr{
-	background:#00c292;
-	color: #fff;
-}
-.datepicker-days  .table-condensed thead tr:first-child{
-	height: 70px;
-}
-.datepicker-days .table-condensed thead tr:last-child {
-    background: #11cc9d;
-    height: 40px;
-}
-.datepicker-days .table-condensed thead tr th:first-child {
-    display:none;
-}
-.datepicker-days .table-condensed tbody tr td:first-child {
-    display:none;
-}
-.datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{
-	background:#00c292;
-	color:#fff;
-}
-.datepicker table tr td.active:hover, .datepicker table tr td.active:hover:hover, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active.disabled:hover:hover, .datepicker table tr td.active:focus, .datepicker table tr td.active:hover:focus, .datepicker table tr td.active.disabled:focus, .datepicker table tr td.active.disabled:hover:focus, .datepicker table tr td.active:active, .datepicker table tr td.active:hover:active, .datepicker table tr td.active.disabled:active, .datepicker table tr td.active.disabled:hover:active, .datepicker table tr td.active.active, .datepicker table tr td.active:hover.active, .datepicker table tr td.active.disabled.active, .datepicker table tr td.active.disabled:hover.active, .open .dropdown-toggle.datepicker table tr td.active, .open .dropdown-toggle.datepicker table tr td.active:hover, .open .dropdown-toggle.datepicker table tr td.active.disabled, .open .dropdown-toggle.datepicker table tr td.active.disabled:hover{
-	background:#00c292;
-	color:#fff;
-}
-.datepicker-dropdown:after, .datepicker-dropdown:before{
-	position:unset;
-	display:none;
-}
-.datepicker table tr td, .datepicker table tr th{
-	border-radius:0px;
-}
-.datepicker table {
-    width: 300px;
-    height: 380px;
-}
-.datepicker.dropdown-menu th, .datepicker.dropdown-menu td {
-    padding: 10px 5px;
-}
-.datepicker th.datepicker-switch {
-    font-size: 16px;
-}
-.datepicker table tr td span.active:hover, .datepicker table tr td span.active:hover:hover, .datepicker table tr td span.active.disabled:hover, .datepicker table tr td span.active.disabled:hover:hover, .datepicker table tr td span.active:focus, .datepicker table tr td span.active:hover:focus, .datepicker table tr td span.active.disabled:focus, .datepicker table tr td span.active.disabled:hover:focus, .datepicker table tr td span.active:active, .datepicker table tr td span.active:hover:active, .datepicker table tr td span.active.disabled:active, .datepicker table tr td span.active.disabled:hover:active, .datepicker table tr td span.active.active, .datepicker table tr td span.active:hover.active, .datepicker table tr td span.active.disabled.active, .datepicker table tr td span.active.disabled:hover.active, .open .dropdown-toggle.datepicker table tr td span.active, .open .dropdown-toggle.datepicker table tr td span.active:hover, .open .dropdown-toggle.datepicker table tr td span.active.disabled, .open .dropdown-toggle.datepicker table tr td span.active.disabled:hover{
-	background:#00c292;
-	color:#fff;
-}
-.datepicker-months .table-condensed thead tr, .datepicker-years .table-condensed thead tr {
-    height: 70px;
-    background: #00c292;
-	color:#fff;
-}
-.datepicker.dropdown-menu .datepicker-months th, .datepicker.dropdown-menu .datepicker-months td {
-    padding: 20px 22px;
-}
+
+
+
 .nk-container i.nk-value {
     width: 25px;
     height: 25px;
@@ -4560,7 +4501,7 @@ body.box-layout {
 /*  57. Breadcomb CSS
 /*----------------------------------------*/
 .breadcomb-area{
-	margin-bottom:30px;
+	margin-bottom:10px;
 }
 .breadcomb-wp{
 	display:flex;
