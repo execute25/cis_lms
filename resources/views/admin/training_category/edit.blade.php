@@ -68,9 +68,28 @@
                                 <div class="nk-int-st">
                                     <div class="toggle-select-act fm-cmp-mg">
                                         <div class="nk-toggle-switch">
-                                            <input id="ts1" value="1" type="checkbox"
-                                                   {{{ $training_category->is_hidden == 1 ? "checked" : '' }}} name="is_hidden"
-                                                   hidden="hidden">
+                                            <input type="hidden" name="is_hidden" value="0">
+                                            <input id="ts1" value="1" name="is_hidden" type="checkbox" {{ $training_category->is_hidden == 1 ? 'checked' : '' }}>
+                                            <label for="ts1" class="ts-helper"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Is Special</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-eye-open"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <div class="toggle-select-act fm-cmp-mg">
+                                        <div class="nk-toggle-switch">
+                                            <input type="hidden" name="is_special" value="0">
+                                            <input id="ts1" value="1" name="is_special" type="checkbox" {{ $training_category->is_special == 1 ? 'checked' : '' }}>
                                             <label for="ts1" class="ts-helper"></label>
                                         </div>
                                     </div>
@@ -97,7 +116,7 @@
 
                         <div class="clearfix"></div>
 
-                        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Region Update</button>
+                        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Update</button>
 
                     </form>
 

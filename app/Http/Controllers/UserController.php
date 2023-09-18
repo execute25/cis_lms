@@ -10,11 +10,15 @@ use App\Http\Requests\User\CellUpdate;
 use App\Http\Requests\User\UserStore;
 use App\Models\CellUserModel;
 use App\Models\LoveCardModel;
+use App\Models\SettingModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
@@ -261,4 +265,43 @@ class UserController extends BaseController
         $user->save();
     }
 
+    public function logout()
+    {
+        Auth::logout();
+
+        return Redirect::to('/login');
+    }
+
+
+    public function login()
+    {
+        $find_admin_user = $this->userRepo->findAdminUserForLogin();
+        if ($find_admin_user) {
+            if (Hash::check(Request::get('password'), $find_admin_user->password)) {
+                Auth::loginUsingId($find_admin_user->id);
+                return redirect('/admin/user');
+            } else {
+                return back()->withInput()->withErrors(['email' => Lang::get("Invalid login credentials.")]);
+            }
+        }
+
+
+        $setting = SettingModel::first();
+
+        $find_normal_user = $this->userRepo->findNormalUserForLogin();
+        if ($find_normal_user) {
+            if ($setting->common_password == Request::get("password")) {
+                Auth::loginUsingId($find_normal_user->id);
+
+                $this->userRepo->emptyTimezoneHandler();
+                return redirect('/web/training/upcoming_trainings');
+            } else {
+                return back()->withInput()->withErrors(['email' => Lang::get("Invalid login credentials")]);
+            }
+        }
+
+
+        // Authentication failed, redirect back with error
+        return back()->withInput()->withErrors(['email' => Lang::get('User not found')]);
+    }
 }

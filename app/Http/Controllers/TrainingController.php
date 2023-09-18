@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\WEB\Repositories\TrainingCategoryRepository;
 use Acme\WEB\Repositories\TrainingRepository;
 use Acme\WEB\Repositories\ZoomRepository;
 use App\DataTables\TrainingDataTable;
@@ -28,11 +29,16 @@ class TrainingController extends BaseController
      * @var ZoomRepository
      */
     private $zoomRepository;
+    /**
+     * @var TrainingCategoryRepository
+     */
+    private $trainingCategoryRepository;
 
-    public function __construct(TrainingRepository $trainingRepo, ZoomRepository $zoomRepository)
+    public function __construct(TrainingRepository $trainingRepo, ZoomRepository $zoomRepository, TrainingCategoryRepository $trainingCategoryRepository)
     {
         $this->trainingRepo = $trainingRepo;
         $this->zoomRepository = $zoomRepository;
+        $this->trainingCategoryRepository = $trainingCategoryRepository;
     }
 
     public function index(TrainingDataTable $dataTable)
@@ -62,13 +68,18 @@ class TrainingController extends BaseController
             $zoom_meeting = $this->zoomRepository->createMeeting($training);
 
             if (isset($zoom_meeting['id'])) {
+
+
                 $training->zoom_conference_id = $zoom_meeting['id'];
                 $training->save();
+
+
+
             }
         }
 
 
-        return Response::json($training);
+        return Response::json($zoom_meeting);
     }
 
     public function edit($id)
@@ -92,18 +103,23 @@ class TrainingController extends BaseController
         $training = $this->trainingRepo->getTrainingById($id);
 
 
+        $training = $this->trainingRepo->updateTraining($training);
+
+        if (Request::filled("training_live_time"))
+            $this->trainingRepo->trainingLiveTimeHandler($training);
+
+
+        if (Request::filled("training_repeat_time"))
+            $this->trainingRepo->trainingRepeatTimeHandler($training);
+
+
         if ($training->is_use_zoom == 1 && $training->name != Request::get("name")) {
             $this->zoomRepository->updateMeeging($training);
         }
 
-        $training = $this->trainingRepo->updateTraining($training);
-
-        if(Request::filled("training_live_time"))
-            $this->trainingRepo->trainingLiveTimeHandler($training);
-
-
-        if(Request::filled("training_repeat_time"))
-            $this->trainingRepo->trainingRepeatTimeHandler($training);
+        $this->trainingRepo->saveImageOfLection($training, Request::file());
+        $this->trainingRepo->imageDeleteHandler($training);
+        $training->save();
 
         return Response::json($training);
     }
@@ -129,19 +145,6 @@ class TrainingController extends BaseController
         return Response::make('', 200);
     }
 
-
-    public function upcoming_trainings()
-    {
-
-        $trainings = $this->trainingRepo->getUpcomingTrainings();
-
-
-
-        $this->layout->content = View::make('web.training.upcoming_trainings', [
-            "trainings" => $trainings
-        ]);
-
-    }
 
     public function get_zoom_join_link($id)
     {
@@ -186,8 +189,10 @@ class TrainingController extends BaseController
         $training_user = $this->trainingRepo->getTrainingUserById($id);
         $training = $this->trainingRepo->getTrainingById($id);
 
-        if (!$training_user)
-            return Response::make('', 410);
+        if (!$training_user) {
+            $training_user = $this->trainingRepo->getOrCreateTrainingUserByTrainingId($training, Auth::user()->id);
+        }
+
 
 //        if ($training_user->status == 0) {
 //            $training_user->status = 1;
@@ -213,6 +218,50 @@ class TrainingController extends BaseController
 
 
         return Response::make($training_user);
+    }
+
+
+    public function upcoming_trainings()
+    {
+        $trainings = $this->trainingRepo->getUpcomingTrainings();
+
+        $this->layout->content = View::make('web.training.upcoming_trainings', [
+            "trainings" => $trainings
+        ]);
+    }
+
+
+    public function available_training_categories()
+    {
+        $training_categories = $this->trainingRepo->getAvailableTrainginCategories();
+
+        $this->layout->content = View::make('web.training.available_training_categories', [
+            "training_categories" => $training_categories
+        ]);
+    }
+
+    public function training_list()
+    {
+        $category_id = Request::get("category_id");
+        $trainings = $this->trainingRepo->getTrainingListByCategoryId($category_id);
+        $category = $this->trainingCategoryRepository->getTrainingCategoryById($category_id);
+
+        $this->layout->content = View::make('web.training.training_list', [
+            "trainings" => $trainings,
+            "category" => $category,
+        ]);
+    }
+
+    public function attendance_list()
+    {
+        $category_id = Request::get("category_id");
+        $trainings = $this->trainingRepo->getTrainingListByCategoryId($category_id);
+        $category = $this->trainingCategoryRepository->getTrainingCategoryById($category_id);
+
+        $this->layout->content = View::make('web.training.training_list', [
+            "trainings" => $trainings,
+            "category" => $category,
+        ]);
     }
 
 

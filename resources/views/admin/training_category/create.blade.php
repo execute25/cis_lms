@@ -69,7 +69,28 @@
                                 <div class="nk-int-st">
                                     <div class="toggle-select-act fm-cmp-mg">
                                         <div class="nk-toggle-switch">
-                                            <input id="ts1" value="1" type="checkbox" name="is_hidden" hidden="hidden">
+                                            <input type="hidden" name="is_hidden" value="0">
+                                            <input id="ts1" value="1" name="is_hidden" type="checkbox" >
+                                            <label for="ts1" class="ts-helper"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Is Special</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-eye-open"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <div class="toggle-select-act fm-cmp-mg">
+                                        <div class="nk-toggle-switch">
+                                            <input type="hidden" name="is_special" value="0">
+                                            <input id="ts1" value="1" name="is_special" type="checkbox" >
                                             <label for="ts1" class="ts-helper"></label>
                                         </div>
                                     </div>

@@ -81,6 +81,24 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Common Password</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="glyphicon glyphicon-globe"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text"
+                                           name="common_password"
+                                           value="{{$setting->common_password}}"
+                                           class="form-control"
+                                           placeholder="Korean Name input">
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="clearfix"></div>
 

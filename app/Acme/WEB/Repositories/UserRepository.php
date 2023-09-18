@@ -4,6 +4,7 @@ namespace Acme\WEB\Repositories;
 
 use App\Helpers\EaseUpload;
 use App\Models\UserModel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Spatie\Permission\Models\Role;
@@ -71,6 +72,29 @@ class UserRepository
         $user->save();
 
         return $user;
+    }
+
+    public function findNormalUserForLogin()
+    {
+        return UserModel::whereHas('roles', function ($query) {
+            $query->whereIn('name', ["cell-leader", "team-leader", "normal"]);
+        })->where("id_number", Request::get("email"))->first();
+    }
+
+    public function findAdminUserForLogin()
+    {
+        return UserModel::whereHas('roles', function ($query) {
+            $query->whereIn('name', ["super-admin", "secretary"]);
+        })->where("email", Request::get("email"))->first();
+    }
+
+    public function emptyTimezoneHandler()
+    {
+        $user = UserModel::find(Auth::user()->id);
+        if ($user->timezone == "") {
+            $user->timezone = "Asia/Seoul";
+            $user->save();
+        }
     }
 
 

@@ -36,7 +36,7 @@
                                         <i class="glyphicon glyphicon-equalizer"></i>
                                     </div>
                                     <div class="nk-int-st">
-                    <textarea class="form-control" required=""
+                    <textarea class="form-control"
                               placeholder="Description input" name="description" id="" cols="30"
                               rows="3">{{$training->description}}</textarea>
                                     </div>
@@ -90,7 +90,6 @@
 
 
             <div class="row mg-t-30">
-
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="breadcomb-list">
 
@@ -135,6 +134,166 @@
 
                 </div>
             </div>
+
+
+            <div class="row mg-t-30">
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #1</b>
+                                @if( $training->file_1 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f1"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_1"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_1 != '' )
+                                    {{{ $training->file_1_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #2</b>
+                                @if( $training->file_2 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f2"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_2"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_2 != '' )
+                                    {{{ $training->file_2_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #3</b>
+                                @if( $training->file_3 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f3"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_3"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_3 != '' )
+                                    {{{ $training->file_3_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #4</b>
+                                @if( $training->file_4 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f4"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_4"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_4 != '' )
+                                    {{{ $training->file_4_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #5</b>
+                                @if( $training->file_5 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f5"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_5"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_5 != '' )
+                                    {{{ $training->file_5_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #6</b>
+                                @if( $training->file_1 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f6"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_6"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_6 != '' )
+                                    {{{ $training->file_6_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="breadcomb-list">
+                        <section class="panel">
+                            <header class="panel-heading"><b>File #1</b>
+                                @if( $training->file_1 != '' )
+                                    &nbsp;&nbsp;<input type="checkbox" name="del_yn[]" value="f1"/>delete
+                                @endif
+                            </header>
+                            <footer class="panel-footer">
+                                <input type="file"
+                                       data-load-image
+                                       name="file_1"
+                                       class="btn btn-sm btn-white"
+                                       title="<i class='icon-plus'></i>File upload"/>
+                                @if( $training->file_1 != '' )
+                                    {{{ $training->file_1_name }}}
+                                @endif
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+            </div>
+
 
             <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Training Update
             </button>

@@ -23,7 +23,9 @@ Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function 
     Route::get('admin/user/get_user_list', 'App\Http\Controllers\UserController@get_user_list');
     Route::get('admin/user/search_users', 'App\Http\Controllers\UserController@search_users');
 
-    Route::resource('admin/training', 'App\Http\Controllers\TrainingController');
+//    Route::resource('admin/training', 'App\Http\Controllers\TrainingController');
+    Route::resource('admin/training', 'App\Http\Controllers\TrainingController')
+        ->names('admin.training');
 
 
     Route::resource('admin/training_category', 'App\Http\Controllers\TrainingCategoryController');
@@ -46,12 +48,19 @@ Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
 });
 
 
+Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function () {
+    Route::post('/training/{id}/attendance_list', 'App\Http\Controllers\TrainingController@attendance_list')->name("training.attendance_list");
+});
+
 Route::group(['middleware' => ['auth'], 'prefix' => '/web'], function () {
-    Route::get('/training/upcoming_trainings', 'App\Http\Controllers\TrainingController@upcoming_trainings');
-    Route::get('/training/{id}/get_zoom_join_link', 'App\Http\Controllers\TrainingController@get_zoom_join_link');
-    Route::get('/training/{id}/show_video', 'App\Http\Controllers\TrainingController@show_video');
-    Route::post('/training/{id}/update_watch_point', 'App\Http\Controllers\TrainingController@update_watch_point');
-    Route::post('/training/{id}/finish_lection', 'App\Http\Controllers\TrainingController@finish_lection');
+    Route::get('/training/upcoming_trainings', 'App\Http\Controllers\TrainingController@upcoming_trainings')->name("training.upcoming_trainings");
+    Route::get('/training/available_training_categories', 'App\Http\Controllers\TrainingController@available_training_categories')->name("training.available_training_categories");
+    Route::get('/training/{id}/get_zoom_join_link', 'App\Http\Controllers\TrainingController@get_zoom_join_link')->name("training.get_zoom_join_link");
+    Route::get('/training/{id}/show_video', 'App\Http\Controllers\TrainingController@show_video')->name("training.show_video");
+    Route::post('/training/{id}/update_watch_point', 'App\Http\Controllers\TrainingController@update_watch_point')->name("training.update_watch_point");
+    Route::post('/training/{id}/finish_lection', 'App\Http\Controllers\TrainingController@finish_lection')->name("training.finish_lection");
+
+    Route::get('/training/training_list', 'App\Http\Controllers\TrainingController@training_list')->name("training.training_list");
 
 
     Route::post('/user/update_timezone', 'App\Http\Controllers\UserController@update_timezone');
@@ -65,12 +74,9 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('redirect_zoom', 'App\Http\Controllers\ZoomController@redirect_zoom');
 Route::any('zoom_webhook', 'App\Http\Controllers\ZoomController@zoom_webhook');
 
-
 Auth::routes(['register' => false]);
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/logout', 'App\Http\Controllers\UserController@logout');
+Route::get('/login_common', 'App\Http\Controllers\UserController@login_common');
+Route::post('/user/login', 'App\Http\Controllers\UserController@login');

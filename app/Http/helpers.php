@@ -29,13 +29,17 @@ function normalizeDate($date): string
     return date('Y-m-d', strtotime($date)) . '(' . $day . ') ' . date('H:i', strtotime($date));
 }
 
-function getRemindTime($date)
+function getRemindTime($date, $type = 0)
 {
     $desiredDate = \Carbon\Carbon::parse($date);
     $currentDate = \Carbon\Carbon::now();
     $timeRemaining = $currentDate->diffForHumans($desiredDate);
 
-    return Lang::get("Remind:") . " $timeRemaining  " . Lang::get("the start of the lecture");
+    if ($type == 0) {
+        return Lang::get("Remind:") . " $timeRemaining  " . Lang::get("the start of the lecture");
+    } else {
+        return Lang::get("Remind:") . " $timeRemaining  " . Lang::get("replay opening");
+    }
 }
 
 function dateTolocal($date, $format = "Y-m-d H:i:s")
@@ -45,4 +49,17 @@ function dateTolocal($date, $format = "Y-m-d H:i:s")
     $timestamp->setTimezone($userTimezone);
 
     return $timestamp->format($format);
+}
+
+function isActiveSubTab($type)
+{
+
+    if ($type == "admin" && request()->route()->getPrefix() === '/admin') {
+        return true;
+    } else if ($type == "edu" && \Illuminate\Support\Facades\Route::is('upcoming_trainings')) {
+        return true;
+    } else {
+        return false;
+    }
+
 }

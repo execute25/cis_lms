@@ -2,7 +2,7 @@
     display: flex;
 }
 
-body{
+body {
     padding-bottom: 50px;
 }
 
@@ -30,7 +30,7 @@ chosen.parsley-error ~ .chosen-container-single {
 /*}*/
 
 .container {
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .lection_article {
@@ -39,6 +39,12 @@ chosen.parsley-error ~ .chosen-container-single {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* Apply a shadow effect */
+
+}
+
+.colored_background .contact-list {
+    background: #d8fad8;
+
 }
 
 .training_btn_block .btn {
@@ -188,9 +194,13 @@ div.training_video {
 }
 
 
-.remind_to_start_text{
+.remind_to_start_text {
     font-weight: bold;
-    margin-bottom: 10px;
+    display: block;
+    /*margin-bottom: 20px;*/
+    /*padding-bottom: 10px;*/
+    margin-bottom: 5px;
+    font-size: 16px;
 }
 
 .footer-copyright-area {
@@ -202,9 +212,12 @@ div.training_video {
 
 .training_list_block {
     margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-.training_live_time_bloсk_remove, .training_repeat_time_bloсk_remove  {
+.training_live_time_bloсk_remove, .training_repeat_time_bloсk_remove {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -212,7 +225,7 @@ div.training_video {
     z-index: 100;
 }
 
-.reg_item{
+.reg_item {
     border: 1px solid #d7d6d6;
     padding-left: 15px;
     padding-right: 15px;
@@ -223,10 +236,100 @@ div.training_video {
 
 }
 
-.add_training_live_time, .add_training_repeat_time{
+.add_training_live_time, .add_training_repeat_time {
     margin-bottom: 15px;
 }
 
-.training_live_time_bloсk_remove:hover, .training_repeat_time_bloсk_remove:hover{
+.training_live_time_bloсk_remove:hover, .training_repeat_time_bloсk_remove:hover {
     cursor: pointer;
+}
+
+.category_item {
+    background: #eaf9ff;
+    margin-bottom: 15px;
+    border: 1px solid #dedcdc;
+    padding-bottom: 10px;
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.category_title {
+    background: #09c;
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, .2) 0, rgba(0, 0, 0, .2) 100%) #09c;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, .2)), color-stop(100%, rgba(0, 0, 0, .2))) #09c;
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, .2) 0, rgba(0, 0, 0, .2) 100%) #09c;
+    background: -o-linear-gradient(top, rgba(255, 255, 255, .2) 0, rgba(0, 0, 0, .2) 100%) #09c;
+    background: -ms-linear-gradient(top, rgba(255, 255, 255, .2) 0, rgba(0, 0, 0, .2) 100%) #09c;
+    background: linear-gradient(top, rgba(255, 255, 255, .2) 0, rgba(0, 0, 0, .2) 100%) #09c;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+
+}
+
+.breadcomb-ctn h2{
+    margin: 0;
+}
+
+.category_title_text {
+    font-size: 18px;
+}
+
+.category_description {
+    padding: 10px;
+}
+
+.category_header {
+    padding-left: 10px;
+    display: flex;
+    padding-right: 10px;
+    font-weight: bold;
+    justify-content: space-between;
+}
+
+.training_item{
+    width: 100%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-bottom: 15px;
+    background:white;
+    -webkit-box-shadow: 2px 2px 11px -3px rgba(0, 0, 0, 0.33);
+    box-shadow: 2px 2px 11px -3px rgba(0, 0, 0, 0.33);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.training_item:hover{
+    cursor: pointer;
+}
+
+.training_item .training_title{
+    font-size: 18px;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+.training_item .training_description{
+    padding-bottom: 10px;
+}
+
+.training_footer{
+    font-size: 13px;
+}
+
+.in_process{
+    background: lightgrey;
+}
+
+
+.training_setting_panel{
+    width: 35px;
 }

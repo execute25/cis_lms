@@ -2,7 +2,9 @@
 
 namespace Acme\WEB\Repositories;
 
+use App\Helpers\EaseUpload;
 use App\Models\MemberGroupUserModel;
+use App\Models\TrainingCategoryModel;
 use App\Models\TrainingLiveTimeModel;
 use App\Models\TrainingModel;
 use App\Models\TrainingRepeatTimeModel;
@@ -12,18 +14,34 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
+use Laravel\Nova\Actions\Response;
 
 class TrainingRepository
 {
 
     protected $options = '
 		{
-			"photo_1":[
-				{"action":"grab","width":512, "height":512},
-				{"action":"thumbnail", "ratio":0.5, "target":"photo_1_thumb" }
+			"file_1":[
+				{"action":"doc","file_name_field":"file_1_name"}
+			],
+			"file_2":[
+				{"action":"doc","file_name_field":"file_2_name"}
+			],
+			"file_3":[
+				{"action":"doc","file_name_field":"file_3_name"}
+			],
+			"file_4":[
+				{"action":"doc","file_name_field":"file_4_name"}
+			],
+			"file_5":[
+				{"action":"doc","file_name_field":"file_5_name"}
+			],
+			"file_6":[
+				{"action":"doc","file_name_field":"file_6_name"}
 			]
 		}
 	';
+
 
     public function __construct()
     {
@@ -90,22 +108,76 @@ class TrainingRepository
 
         $currentDateTime = Carbon::now();
 
-        $trainings = TrainingModel::query();
-        $trainings = $trainings
-            ->join("training_categories", "training_categories.id", "=", "trainings.category_id")
+        $live_trainings = TrainingModel::join("training_categories", "training_categories.id", "=", "trainings.category_id")
+            ->join("training_live_times", function ($join) use ($currentDateTime) {
+                $join->on("training_live_times.training_id", "=", "trainings.id")
+                    ->whereRaw("training_live_times.start_at = (
+                SELECT MIN(start_at)
+                FROM training_live_times AS tl
+                WHERE tl.training_id = trainings.id
+                AND tl.end_at > '$currentDateTime'
+             )");
+            })
             ->whereIn("category_id", $allow_category_id)
-            ->where(DB::raw("CONCAT(end_at, ' ', end_at_time,':00')"), '>', $currentDateTime)
+            ->where(DB::raw("training_live_times.end_at"), '>', $currentDateTime)
             ->where("is_use_zoom", 1)
             ->where("training_categories.is_hidden", 0)
             ->select(
                 "trainings.*"
                 , "training_categories.title as category_title"
+                , "training_categories.is_special"
+                , DB::raw("MAX(training_live_times.start_at) as start_at")
+                , DB::raw("MAX(training_live_times.end_at) as end_at")
+                , DB::raw("CONCAT('0') as training_type")
             )
-            ->orderBY("start_at", "asc")
-            ->orderBY("start_at_time", "asc")
+            ->with([
+                "training_live_times", "training_repeat_times"
+            ])
+            ->groupBy(
+                "trainings.id",
+                "training_categories.title",
+                "training_live_times.start_at",
+                "training_live_times.end_at"
+            )
             ->get();
 
-        return $trainings;
+
+        $repeat_trainings = TrainingModel::join("training_categories", "training_categories.id", "=", "trainings.category_id")
+            ->join("training_repeat_times", function ($join) use ($currentDateTime) {
+                $join->on("training_repeat_times.training_id", "=", "trainings.id")
+                    ->whereRaw("training_repeat_times.start_at = (
+                SELECT MIN(start_at)
+                FROM training_repeat_times AS tl
+                WHERE tl.training_id = trainings.id
+                AND tl.end_at > '$currentDateTime'
+             )");
+            })
+            ->whereIn("category_id", $allow_category_id)
+            ->where(DB::raw("training_repeat_times.end_at"), '>', $currentDateTime)
+            ->where("is_use_zoom", 1)
+            ->where("training_categories.is_hidden", 0)
+            ->select(
+                "trainings.*"
+                , "training_categories.title as category_title"
+                , "training_categories.is_special"
+                , DB::raw("MAX(training_repeat_times.start_at) as start_at")
+                , DB::raw("MAX(training_repeat_times.end_at) as end_at")
+                , DB::raw("CONCAT('1') as training_type")
+            )
+            ->with([
+                "training_live_times", "training_repeat_times"
+            ])
+            ->groupBy(
+                "trainings.id",
+                "training_categories.title",
+                "training_repeat_times.start_at",
+                "training_repeat_times.end_at"
+            )
+            ->get();
+
+        $result_object = $repeat_trainings->merge($live_trainings)->unique('id');
+
+        return $result_object->sortBy('start_at');
 
 
     }
@@ -268,6 +340,113 @@ class TrainingRepository
     public function getTrainingRepeatTimeByTrainingId($id)
     {
         return TrainingRepeatTimeModel::where("training_id", $id)->get();
+    }
+
+    public function getAvailableTrainginCategories()
+    {
+        $allow_category_id = $this->getAllowedTrainingCategoryIDs();
+
+        $training_categories = TrainingCategoryModel::whereIn("id", $allow_category_id)
+            ->where("is_hidden", 0)
+            ->select(
+                "training_categories.*"
+                , DB::raw(DB::raw("(SELECT COUNT(*) FROM trainings WHERE trainings.category_id = training_categories.id AND trainings.bunny_id != '') as lection_count"))
+            )
+            ->orderBy("id", "desc")
+            ->get();
+
+        return $training_categories;
+
+    }
+
+    public function getTrainingListByCategoryId($category_id)
+    {
+        $allow_category_id = $this->getAllowedTrainingCategoryIDs();
+
+        $trainings = TrainingModel::
+        leftjoin("training_users", "trainings.id", "=", DB::raw("training_users.training_id AND training_users.user_id = " . Auth::user()->id))
+            ->whereIn("trainings.category_id", $allow_category_id)->where("trainings.category_id", $category_id)
+            ->where("bunny_id", "!=", "")
+            ->select(
+                "trainings.*"
+                , "training_users.attend_duration"
+                , "training_users.watch_time"
+                , "training_users.progress"
+            )
+            ->get();
+
+
+        $result_array = [];
+        $currentDateTime = Carbon::now();
+
+        foreach ($trainings as $index => $training) {
+            $count_not_ended_live = TrainingLiveTimeModel::where("training_id", $training->id)
+                ->where(DB::raw("training_live_times.end_at"), '>', $currentDateTime)
+                ->count(); // count of not finished zoom times
+
+            $count_not_ended_repeat = TrainingRepeatTimeModel::where("training_id", $training->id)
+                ->where(DB::raw("training_repeat_times.end_at"), '>', $currentDateTime)
+                ->count(); // count of not finished repeat times
+
+            if ($count_not_ended_live == 0 && $count_not_ended_repeat == 0) {// exclude lection if have not finished zoom or repeat
+                $training->in_process = 0;
+            } else {
+                $training->in_process = 1;
+            }
+        }
+
+        return $trainings;
+
+    }
+
+    public function saveImageOfLection($lection, $files)
+    {
+
+        EaseUpload::images($lection, $files, $this->options);
+        $lection->save();
+    }
+
+    public function imageDeleteHandler($model)
+    {
+        // Delete checked images from disk and clear entry ******
+        if (Request::filled("del_yn")) {
+            foreach (Request::get("del_yn") as $element_for_delete) {
+                if ($element_for_delete == "f1") {
+                    $model->file_1 = "";
+                    $model->file_1_name = "";
+                }
+
+                if ($element_for_delete == "f2") {
+                    $model->file_2 = "";
+                    $model->file_2_name = "";
+                }
+
+                if ($element_for_delete == "f3") {
+                    $model->file_3 = "";
+                    $model->file_3_name = "";
+                }
+
+                if ($element_for_delete == "f4") {
+                    $model->file_4 = "";
+                    $model->file_4_name = "";
+                }
+
+                if ($element_for_delete == "f5") {
+                    $model->file_5 = "";
+                    $model->file_5_name = "";
+                }
+
+
+                if ($element_for_delete == "f6") {
+                    $model->file_6 = "";
+                    $model->file_6_name = "";
+                }
+            }
+
+        }
+
+        $model->save();
+        return $model;
     }
 
 

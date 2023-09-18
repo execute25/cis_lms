@@ -115,8 +115,8 @@ class TrainingDataTable extends DataTable
                 ->title("Name"),
             Column::make('start_at')
                 ->title("Start at"),
-            Column::make('category_id')
-                ->title("Category Title"),
+//            Column::make('category_id')
+//                ->title("Category Title"),
             Column::make('bunny_id')
                 ->title("Bunny video ID"),
             Column::make('include_groups')

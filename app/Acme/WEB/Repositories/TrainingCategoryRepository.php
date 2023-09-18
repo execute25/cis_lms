@@ -52,8 +52,8 @@ class TrainingCategoryRepository
     {
         $query = $this->getTrainingCategoryById($id);
 
-        $data = array_filter(Request::all());
-        $query->fill($data);
+//        $data = array_filter(Request::all());
+        $query->fill(Request::all());
 
 
         $query->save();
