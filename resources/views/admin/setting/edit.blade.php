@@ -7,80 +7,6 @@
 
                     <form id="form" action="/admin/setting/{{{ $setting->id }}}" method="POST" data-validate="parsley">
 
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="nk-int-mk  mg-t-10">
-                                <h5>Zoom Account ID</h5>
-                            </div>
-                            <div class="form-group ic-cmp-int">
-                                <div class="form-ic-cmp">
-                                    <i class="glyphicon glyphicon-globe"></i>
-                                </div>
-                                <div class="nk-int-st">
-                                    <input type="text"
-                                           name="zoom_account_id"
-                                           value="{{$setting->zoom_account_id}}"
-                                           required=""
-                                           class="form-control"
-                                           placeholder="Name input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="nk-int-mk  mg-t-10">
-                                <h5>Zoom Client ID</h5>
-                            </div>
-                            <div class="form-group ic-cmp-int">
-                                <div class="form-ic-cmp">
-                                    <i class="glyphicon glyphicon-globe"></i>
-                                </div>
-                                <div class="nk-int-st">
-                                    <input type="text"
-                                           name="zoom_client_id"
-                                           value="{{$setting->zoom_client_id}}"
-                                           class="form-control"
-                                           placeholder="Korean Name input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="nk-int-mk  mg-t-10">
-                                <h5>Zoom Client Secret</h5>
-                            </div>
-                            <div class="form-group ic-cmp-int">
-                                <div class="form-ic-cmp">
-                                    <i class="glyphicon glyphicon-globe"></i>
-                                </div>
-                                <div class="nk-int-st">
-                                    <input type="text"
-                                           name="zoom_client_secret"
-                                           value="{{$setting->zoom_client_secret}}"
-                                           class="form-control"
-                                           placeholder="Korean Name input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="nk-int-mk  mg-t-10">
-                                <h5>Zoom Redirect URL</h5>
-                            </div>
-                            <div class="form-group ic-cmp-int">
-                                <div class="form-ic-cmp">
-                                    <i class="glyphicon glyphicon-globe"></i>
-                                </div>
-                                <div class="nk-int-st">
-                                    <input type="text"
-                                           name="zoom_redirect_url"
-                                           value="{{$setting->zoom_redirect_url}}"
-                                           class="form-control"
-                                           placeholder="Korean Name input">
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="nk-int-mk  mg-t-10">
                                 <h5>Common Password</h5>
@@ -101,6 +27,29 @@
 
 
                         <div class="clearfix"></div>
+
+
+                        <div class="row mg-t-30">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="breadcomb-list">
+
+                        <span class="btn btn-success btn-block add_zoom_setting"><i
+                                class="glyphicon glyphicon-plus"></i>  Add Zoom Setting</span>
+
+                                    @include('web.templates.zoom_setting', ["index" => 0])
+                                    @include('web.templates.zoom_setting', ["index" => 1])
+                                    @include('web.templates.zoom_setting', ["index" => 2])
+                                    @include('web.templates.zoom_setting', ["index" => 3])
+                                    @include('web.templates.zoom_setting', ["index" => 4])
+                                    @include('web.templates.zoom_setting', ["index" => 5])
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
 
                         <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Setting Update
                         </button>
@@ -158,6 +107,22 @@
                     });
                 }
             });
+        });
+
+
+        $('body').on('click', ".zoom_setting_bloсk_remove", function () {
+            console.log(1)
+            $(this).parents(".zoom_setting_bloсk").css("display", "none")
+            $(this).parents(".zoom_setting_bloсk").find(".is_delete").val("1")
+        });
+
+
+        $('body').on('click', ".add_zoom_setting", function () {
+            var index = $(".zoom_setting_bloсk:visible").length;
+            console.log(index)
+            $(".zoom_setting_bloсk_" + index).css("display", "block")
+            $(".zoom_setting_bloсk_" + index).find(".is_delete").val("0")
+
         });
 
     </script>

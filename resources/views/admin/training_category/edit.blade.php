@@ -77,6 +77,22 @@
                             </div>
                         </div>
 
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+                            <div class="nk-int-mk">
+                                <h5>Zoom Account</h5>
+                            </div>
+                            <div class="chosen-select-act fm-cmp-mg">
+                                <select class="chosen" name="zoom_host_email" required="" style="width:200px;"/>
+                                <option value=""></option>
+                                @foreach($zoom_account_settings as $zoom_account_setting)
+                                    <option
+                                        {{$training_category->zoom_host_email == $zoom_account_setting->host_email ? "selected" : ""}}  value="{{{$zoom_account_setting->host_email}}}">{{{$zoom_account_setting->host_email}}}</option>
+                                    @endforeach
+                                    </select>
+                            </div>
+                        </div>
+
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="nk-int-mk  mg-t-10">
                                 <h5>Is Special</h5>

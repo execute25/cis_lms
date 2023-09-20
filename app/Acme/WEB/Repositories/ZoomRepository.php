@@ -4,6 +4,7 @@ namespace Acme\WEB\Repositories;
 
 use App\Models\SettingModel;
 use App\Models\UserModel;
+use App\Models\ZoomAccountSettingModel;
 use App\Models\ZoomMeetingLogModel;
 use App\Models\ZoomTrainingDataModel;
 use GuzzleHttp\Client;
@@ -22,28 +23,27 @@ class ZoomRepository
 
     public function __construct(TrainingRepository $trainingRepository)
     {
-        $setting = SettingModel::first();
-        $this->ACCOUNT_ID = $setting->zoom_account_id;
-        $this->CLIENT_ID = $setting->zoom_client_id;
-        $this->CLIENT_SECRET = $setting->zoom_client_secret;
-        $this->REDIRECT_URI = $setting->redirect_url;
         $this->trainingRepository = $trainingRepository;
     }
 
     public function makeMeetingHadler($meeting_id, $next_page = "")
     {
-        $training = App::make("Acme\WEB\Repositories\TrainingRepository");
-        $training = $training->getTrainingByMeetingID($meeting_id);
+        $setting = App::make("Acme\WEB\Repositories\SettingRepository");
+        $training_category = App::make("Acme\WEB\Repositories\TrainingCategoryRepository");
+
+        $training = $this->trainingRepository->getTrainingByMeetingID($meeting_id);
+        $training_category = $training_category->getTrainingCategoryById($training->category_id);
+        $zoom_setting = $setting->getSettingByEmail($training_category->zoom_host_email);
 
 
         if (!$training) {
-            Log::info("Lection not found 1");
+            Log::info("Training not found 1");
             Log::info("Meeting " . $meeting_id);
             return;
         }
 
 
-        $meeting_attend_data = $this->lastMeetingAttendData($meeting_id, $next_page, $training);
+        $meeting_attend_data = $this->lastMeetingAttendData($meeting_id, $next_page, $zoom_setting);
 
         if ($training) {
             $this->meetingAttendTimeHandler($meeting_attend_data['duration_array'], $training);
@@ -59,7 +59,7 @@ class ZoomRepository
 
     }
 
-    public function lastMeetingAttendData($meeting_id, $next_page_token = "", $lection)
+    public function lastMeetingAttendData($meeting_id, $next_page_token = "", $zoom_setting)
     {
 
         $duration_array = [];
@@ -71,7 +71,7 @@ class ZoomRepository
 //        $response = $client->request('GET', '/v2/past_meetings/82358994661/instances', [
         $response = $client->request('GET', '/v2/metrics/meetings/' . $meeting_id . '/participants', [
             "headers" => [
-                "Authorization" => "Bearer " . $this->getZoomAccessToken(),
+                "Authorization" => "Bearer " . $this->getZoomAccessToken($zoom_setting),
 
             ],
             'query' => [
@@ -103,12 +103,12 @@ class ZoomRepository
             $join_time = $item->join_time;
 
             // inspect is lection and zoom participant attend time matching. If not then lection not for this zoom data
-            $norm_join_time = date("Y-m-d H:i:s", strtotime($join_time));
-            if ($lection->begin_at > $norm_join_time || $lection->end_at < $norm_join_time) {
-                Log::info("Zoom data not for current lection. Late firing");
-                Log::info($norm_join_time);
-                break;
-            }
+//            $norm_join_time = date("Y-m-d H:i:s", strtotime($join_time));
+//            if ($lection->begin_at > $norm_join_time || $lection->end_at < $norm_join_time) {
+//                Log::info("Zoom data not for current lection. Late firing");
+//                Log::info($norm_join_time);
+//                break;
+//            }
 
 
             $duration = strtotime($leave_time) - strtotime($join_time);
@@ -136,15 +136,15 @@ class ZoomRepository
         ];
     }
 
-    public function getZoomAccessToken()
+    public function getZoomAccessToken($zoom_setting)
     {
-        $client_id = $this->CLIENT_ID;
-        $client_secret = $this->CLIENT_SECRET;
+        $client_id = $zoom_setting->zoom_client_id;
+        $client_secret = $zoom_setting->zoom_client_secret;
 
 
         $client = new \GuzzleHttp\Client([
             'form_params' => [
-                'account_id' => $this->ACCOUNT_ID,
+                'account_id' => $zoom_setting->zoom_account_id,
                 'grant_type' => "account_credentials",
 
             ],
@@ -162,8 +162,6 @@ class ZoomRepository
 
         return $data->access_token;
     }
-
-
 
 
     private function meetingAttendTimeHandler(array $meeting_attend_data, $training)
@@ -253,9 +251,9 @@ class ZoomRepository
 //        return 0;
 //    }
 
-    public function createMeeting($training)
+    public function createMeeting($training, $zoom_setting)
     {
-        $accessToken = $this->getZoomAccessToken();
+        $accessToken = $this->getZoomAccessToken($zoom_setting);
         $traning_date_time = $training->start_at . " " . $training->start_at_time;
         $date_time = new \DateTime($traning_date_time);
         $start_time = $date_time->format('Y-m-d\TH:i:s\Z');
@@ -291,9 +289,9 @@ class ZoomRepository
     }
 
 
-    public function updateMeeging($training)
+    public function updateMeeting($training, $zoom_setting)
     {
-        $accessToken = $this->getZoomAccessToken();
+        $accessToken = $this->getZoomAccessToken($zoom_setting);
 
         $meetingId = $training->zoom_conference_id;
         $apiEndpoint = "https://api.zoom.us/v2/meetings/$meetingId";
@@ -319,9 +317,9 @@ class ZoomRepository
     }
 
 
-    public function deleteMeeting($training)
+    public function deleteMeeting($training, $zoom_setting)
     {
-        $accessToken = $this->getZoomAccessToken();
+        $accessToken = $this->getZoomAccessToken($zoom_setting);
 
         $meetingId = $training->zoom_conference_id;
         $apiEndpoint = "https://api.zoom.us/v2/meetings/$meetingId";
@@ -342,7 +340,7 @@ class ZoomRepository
         }
     }
 
-    public function makeTrainingJoinZoomLink($training)
+    public function makeTrainingJoinZoomLink($training, $zoom_setting)
     {
         $client = new \GuzzleHttp\Client(['base_uri' => 'https://api.zoom.us',
         ]);
@@ -350,7 +348,7 @@ class ZoomRepository
 
         $response = $client->request('POST', '/v2/meetings/' . $training->zoom_conference_id . '/registrants', [
             "headers" => [
-                "Authorization" => "Bearer " . $this->getZoomAccessToken(),
+                "Authorization" => "Bearer " . $this->getZoomAccessToken($zoom_setting),
             ],
 
 
@@ -367,4 +365,5 @@ class ZoomRepository
         $meeting_url = isset($data->join_url) ? $data->join_url : '';
         return $meeting_url;
     }
+
 }

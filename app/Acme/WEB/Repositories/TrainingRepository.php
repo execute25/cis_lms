@@ -373,6 +373,7 @@ class TrainingRepository
                 , "training_users.watch_time"
                 , "training_users.progress"
             )
+            ->orderBy("training_users.id",'desc')
             ->get();
 
 

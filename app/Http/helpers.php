@@ -63,3 +63,26 @@ function isActiveSubTab($type)
     }
 
 }
+
+
+function countTrainingMaterials($training)
+{
+    $count_materials = 0;
+    for ($i = 1; $i <= 6; $i++) {
+        if ($training->{"file_$i"} != "")
+            $count_materials++;
+    }
+
+    return $count_materials;
+}
+
+function getFirstMaterial($training)
+{
+    $count_materials = 0;
+    for ($i = 1; $i <= 6; $i++) {
+        if ($training->{"file_$i"} != "")
+            return $training->{"file_$i"};
+    }
+
+    return "";
+}

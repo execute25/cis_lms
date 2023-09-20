@@ -217,7 +217,7 @@ div.training_video {
     flex-wrap: wrap;
 }
 
-.training_live_time_bloсk_remove, .training_repeat_time_bloсk_remove {
+.training_live_time_bloсk_remove, .training_repeat_time_bloсk_remove, .zoom_setting_bloсk_remove{
     position: absolute;
     right: 10px;
     top: 10px;
@@ -236,11 +236,11 @@ div.training_video {
 
 }
 
-.add_training_live_time, .add_training_repeat_time {
+.add_training_live_time, .add_training_repeat_time, .add_zoom_setting  {
     margin-bottom: 15px;
 }
 
-.training_live_time_bloсk_remove:hover, .training_repeat_time_bloсk_remove:hover {
+.training_live_time_bloсk_remove:hover, .training_repeat_time_bloсk_remove:hover  , .zoom_setting_bloсk_remove:hover{
     cursor: pointer;
 }
 
@@ -332,4 +332,12 @@ div.training_video {
 
 .training_setting_panel{
     width: 35px;
+}
+
+.btn{
+    color: white;
+}
+
+.btn:hover,.btn:active, .btn:visited{
+    color: white;
 }

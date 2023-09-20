@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\WEB\Repositories\SettingRepository;
 use Acme\WEB\Repositories\TrainingCategoryRepository;
 use Acme\WEB\Repositories\TrainingRepository;
 use Acme\WEB\Repositories\ZoomRepository;
@@ -33,12 +34,21 @@ class TrainingController extends BaseController
      * @var TrainingCategoryRepository
      */
     private $trainingCategoryRepository;
+    /**
+     * @var SettingRepository
+     */
+    private $settingRepository;
 
-    public function __construct(TrainingRepository $trainingRepo, ZoomRepository $zoomRepository, TrainingCategoryRepository $trainingCategoryRepository)
+    /**
+     * @var TrainingCategoryRepository
+     */
+
+    public function __construct(TrainingRepository $trainingRepo, ZoomRepository $zoomRepository, TrainingCategoryRepository $trainingCategoryRepository, SettingRepository $settingRepository)
     {
         $this->trainingRepo = $trainingRepo;
         $this->zoomRepository = $zoomRepository;
         $this->trainingCategoryRepository = $trainingCategoryRepository;
+        $this->settingRepository = $settingRepository;
     }
 
     public function index(TrainingDataTable $dataTable)
@@ -64,22 +74,35 @@ class TrainingController extends BaseController
     {
         $training = $this->trainingRepo->createNewTraining();
 
+        if (Request::filled("training_live_time"))
+            $this->trainingRepo->trainingLiveTimeHandler($training);
+
+
+        if (Request::filled("training_repeat_time"))
+            $this->trainingRepo->trainingRepeatTimeHandler($training);
+
         if ($training->is_use_zoom == 1) {
-            $zoom_meeting = $this->zoomRepository->createMeeting($training);
+            $training_category = $this->trainingCategoryRepository->getTrainingCategoryById($training->category_id);
+            $zoom_setting = $this->settingRepository->getSettingByEmail($training_category->zoom_host_email);
+            $zoom_meeting = $this->zoomRepository->createMeeting($training, $zoom_setting);
+
 
             if (isset($zoom_meeting['id'])) {
-
-
-                $training->zoom_conference_id = $zoom_meeting['id'];
+                $zoom_conference_id = $zoom_meeting['id'];
+                $training->zoom_conference_id = $zoom_conference_id;
                 $training->save();
 
-
+                $this->settingRepository->createUpdateAccountConference($zoom_conference_id, $zoom_setting);
 
             }
+
+            return Response::json($zoom_meeting);
         }
 
 
-        return Response::json($zoom_meeting);
+
+
+        return Response::json("");
     }
 
     public function edit($id)
@@ -89,7 +112,6 @@ class TrainingController extends BaseController
         $training_live_times = $this->trainingRepo->getTrainingLiveTimeByTrainingId($id);
         $training_repeat_times = $this->trainingRepo->getTrainingRepeatTimeByTrainingId($id);
 
-//        return $training_live_time->toArray();
 
         $this->layout->content = View::make('admin.training.edit', [
             'training' => $training,
@@ -102,7 +124,6 @@ class TrainingController extends BaseController
     {
         $training = $this->trainingRepo->getTrainingById($id);
 
-
         $training = $this->trainingRepo->updateTraining($training);
 
         if (Request::filled("training_live_time"))
@@ -114,7 +135,9 @@ class TrainingController extends BaseController
 
 
         if ($training->is_use_zoom == 1 && $training->name != Request::get("name")) {
-            $this->zoomRepository->updateMeeging($training);
+            $training_category = $this->trainingCategoryRepository->getTrainingCategoryById($training->category_id);
+            $zoom_setting = $this->settingRepository->getSettingByEmail($training_category->zoom_host_email);
+            $this->zoomRepository->updateMeeting($training, $zoom_setting);
         }
 
         $this->trainingRepo->saveImageOfLection($training, Request::file());
@@ -133,12 +156,22 @@ class TrainingController extends BaseController
         $training = TrainingModel::find($id);
 
         if ($training) {
-            try {
-                $this->zoomRepository->deleteMeeting($training);
-            } catch (Exception $exception) {
-                Log::error("Meeting delete error. Training id:" . $id);
+
+            if ($training->zoom_conference_id != "") {
+                try {
+
+                    $training_category = $this->trainingCategoryRepository->getTrainingCategoryById($training->category_id);
+                    $zoom_setting = $this->settingRepository->getSettingByEmail($training_category->zoom_host_email);
+
+                    $this->zoomRepository->deleteMeeting($training, $zoom_setting);
+                } catch (Exception $exception) {
+                    Log::error("Meeting delete error. Training id:" . $id);
+                }
             }
+
+
             TrainingModel::destroy($id);
+
         }
 
 
@@ -161,7 +194,10 @@ class TrainingController extends BaseController
             if ($training->zoom_conference_id == "")
                 return Response::make("Zoom conference ID empty", 412);
 
-            $user_training->join_zoom_link = $this->zoomRepository->makeTrainingJoinZoomLink($training);
+            $training_category = $this->trainingCategoryRepository->getTrainingCategoryById($training->category_id);
+            $zoom_setting = $this->settingRepository->getSettingByEmail($training_category->zoom_host_email);
+
+            $user_training->join_zoom_link = $this->zoomRepository->makeTrainingJoinZoomLink($training,$zoom_setting);
             $user_training->save();
         }
 
@@ -261,6 +297,15 @@ class TrainingController extends BaseController
         $this->layout->content = View::make('web.training.training_list', [
             "trainings" => $trainings,
             "category" => $category,
+        ]);
+    }
+
+    public function material_list($id)
+    {
+        $training = $this->trainingRepo->getTrainingById($id);
+
+        $this->layout->content = View::make('web.training.material_list', [
+            "training" => $training,
         ]);
     }
 

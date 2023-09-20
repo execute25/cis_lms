@@ -58,6 +58,20 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+                            <div class="nk-int-mk">
+                                <h5>Zoom Account</h5>
+                            </div>
+                            <div class="chosen-select-act fm-cmp-mg">
+                                <select class="chosen" name="zoom_host_email" required="" style="width:200px;"/>
+                                <option value=""></option>
+                                @foreach($zoom_account_settings as $zoom_account_setting)
+                                    <option value="{{{$zoom_account_setting->host_email}}}">{{{$zoom_account_setting->host_email}}}</option>
+                                    @endforeach
+                                    </select>
+                            </div>
+                        </div>
+
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="nk-int-mk  mg-t-10">
                                 <h5>Is hidden</h5>
@@ -70,7 +84,7 @@
                                     <div class="toggle-select-act fm-cmp-mg">
                                         <div class="nk-toggle-switch">
                                             <input type="hidden" name="is_hidden" value="0">
-                                            <input id="ts1" value="1" name="is_hidden" type="checkbox" >
+                                            <input id="ts1" value="1" name="is_hidden" type="checkbox">
                                             <label for="ts1" class="ts-helper"></label>
                                         </div>
                                     </div>
@@ -90,7 +104,7 @@
                                     <div class="toggle-select-act fm-cmp-mg">
                                         <div class="nk-toggle-switch">
                                             <input type="hidden" name="is_special" value="0">
-                                            <input id="ts1" value="1" name="is_special" type="checkbox" >
+                                            <input id="ts1" value="1" name="is_special" type="checkbox">
                                             <label for="ts1" class="ts-helper"></label>
                                         </div>
                                     </div>

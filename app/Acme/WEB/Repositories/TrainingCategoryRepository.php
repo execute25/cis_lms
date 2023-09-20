@@ -31,13 +31,6 @@ class TrainingCategoryRepository
             $data
         );
 
-        if (Request::filled("include_groups")) {
-            $query->include_groups = implode(",", Request::get("include_groups"));
-        } else {
-            $query->include_groups = "";
-        }
-
-
         $query->save();
 
         return $query;
@@ -51,18 +44,11 @@ class TrainingCategoryRepository
     public function updateTrainingCategory($id)
     {
         $query = $this->getTrainingCategoryById($id);
-
 //        $data = array_filter(Request::all());
         $query->fill(Request::all());
 
-
         $query->save();
 
-        if (Request::filled("include_groups")) {
-            $query->membergroups()->sync(Request::get("include_groups"));
-        } else {
-            $query->membergroups()->sync([]);
-        }
 
 
         return $query;
