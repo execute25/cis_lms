@@ -8,6 +8,7 @@ use App\Models\ZoomAccountSettingModel;
 use App\Models\ZoomMeetingLogModel;
 use App\Models\ZoomTrainingDataModel;
 use GuzzleHttp\Client;
+use http\Env\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -181,7 +182,7 @@ class ZoomRepository
             if (!$user)
                 continue;
 
-            $trainin_user = $this->trainingRepository->getOrCreateTrainingUserByTrainingId($training, $user->id);
+            $trainin_user = $this->trainingRepository->getOrCreateTrainingUserByTrainingId($training->id, $user->id);
             $trainin_user->attend_duration = $trainin_user->attend_duration < $duration ? $duration : $trainin_user->attend_duration;
 
 //            if ($duration >= (30 * 60))
@@ -265,11 +266,20 @@ class ZoomRepository
             'type' => 2, // 2 for scheduled meeting
             'start_time' => $start_time, // Replace with your desired start time
             'duration' => 120, // Meeting duration in minutes
+            'password' => "19840314",
+            "recurrence" => [
+                "type" => 2,  # 2 indicates a weekly recurrence
+                "repeat_interval" => 1,  # Recurs every week
+                "weekly_days" => "1",  # 1 indicates Monday; You can specify multiple days like "1,3,5" for Monday, Wednesday, and Friday
+                "end_times" => 1  # Specify the number of occurrences
+            ],
             'settings' => [
                 'join_before_host' => false,
                 'registration_type' => 2, // 2 for registration required
                 'approval_type' => 1, // 2 for automatic approval
-//                'waiting_room' => false
+                'meeting_authentication' => false,
+                'host_video' => false,
+                'waiting_room' => true
             ],
         ];
 
@@ -297,7 +307,7 @@ class ZoomRepository
         $apiEndpoint = "https://api.zoom.us/v2/meetings/$meetingId";
 
         $meetingData = [
-            'topic' => $training->name, // Replace with the new meeting name
+            'topic' => \Illuminate\Support\Facades\Request::get("name"), // Replace with the new meeting name
         ];
 
         $client = new Client();
@@ -345,6 +355,8 @@ class ZoomRepository
         $client = new \GuzzleHttp\Client(['base_uri' => 'https://api.zoom.us',
         ]);
 
+        $id_number = Auth::user()->id_number;
+        $id_number = substr($id_number, 2);
 
         $response = $client->request('POST', '/v2/meetings/' . $training->zoom_conference_id . '/registrants', [
             "headers" => [
@@ -353,8 +365,8 @@ class ZoomRepository
 
 
             'json' => [
-                'first_name' => Auth::user()->name,
-                'last_name' => ".",
+                'first_name' => $id_number,
+                'last_name' => Auth::user()->name,
                 'email ' => Auth::user()->id . "@gmail.com",
                 'auto_approve ' => true,
 

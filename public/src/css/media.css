@@ -21,7 +21,19 @@
         padding-bottom: 56.27198%;
     }
 
+    .modal-dialog.modals-default, .modal-dialog.modal-sm, .modal-dialog.modal-large {
+        width: 335px;
+        margin: 50px 25px;
+    }
+
+    /*.logo_block {*/
+    /*    display: block;*/
+    /*    margin-bottom: 10px;*/
+    /*}*/
+
 }
+
+
 
 /* Extra Small Devices, Phones */
 @media only screen and (max-width: 480px) {

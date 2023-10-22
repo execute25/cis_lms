@@ -14,6 +14,7 @@ use App\Models\ZoomLectionDataModel;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 
 class ZoomController extends Controller
 {
@@ -69,7 +70,7 @@ class ZoomController extends Controller
 
 //        return Response::json([
 //            "plainToken" => $payload["plainToken"],
-//            "encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "iaCdUEVOSvWOzKY07GrnpQ")
+//            "encryptedToken" => hash_hmac("sha256", $payload["plainToken"], "ne7zidcfTWW2Sl5_gnEraA")
 //        ]);
 
 

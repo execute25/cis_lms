@@ -43,9 +43,10 @@ class UserDataTable extends DataTable
 
                 return "";
             })
-            ->editColumn('department', function ($data) {
-                return UserModel::getDepartmentList()[$data->department];
-            });
+//            ->editColumn('department', function ($data) {
+//                return UserModel::getDepartmentList()[$data->department];
+//            })
+            ;
 
     }
 
@@ -98,6 +99,8 @@ class UserDataTable extends DataTable
                 ->title("Korean Name"),
             Column::make('email')
                 ->title("Email"),
+            Column::make('id_number')
+                ->title("Member Number"),
             Column::make('department')
                 ->title("Department"),
             Column::make('phone')

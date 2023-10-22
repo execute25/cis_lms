@@ -3,7 +3,12 @@
 }
 
 body {
-    padding-bottom: 50px;
+    padding-bottom: 90px;
+}
+
+.container table.table td, .container table.table th {
+    vertical-align: middle;
+    text-align: center;
 }
 
 .parsley-errors-list {
@@ -49,6 +54,8 @@ chosen.parsley-error ~ .chosen-container-single {
 
 .training_btn_block .btn {
     white-space: inherit;
+    margin-bottom: 10px;
+
 }
 
 
@@ -217,7 +224,7 @@ div.training_video {
     flex-wrap: wrap;
 }
 
-.training_live_time_bloсk_remove, .training_repeat_time_bloсk_remove, .zoom_setting_bloсk_remove{
+.training_live_time_bloсk_remove, .training_repeat_time_bloсk_remove, .zoom_setting_bloсk_remove {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -236,11 +243,11 @@ div.training_video {
 
 }
 
-.add_training_live_time, .add_training_repeat_time, .add_zoom_setting  {
+.add_training_live_time, .add_training_repeat_time, .add_zoom_setting {
     margin-bottom: 15px;
 }
 
-.training_live_time_bloсk_remove:hover, .training_repeat_time_bloсk_remove:hover  , .zoom_setting_bloсk_remove:hover{
+.training_live_time_bloсk_remove:hover, .training_repeat_time_bloсk_remove:hover, .zoom_setting_bloсk_remove:hover {
     cursor: pointer;
 }
 
@@ -270,7 +277,7 @@ div.training_video {
 
 }
 
-.breadcomb-ctn h2{
+.breadcomb-ctn h2 {
     margin: 0;
 }
 
@@ -290,14 +297,14 @@ div.training_video {
     justify-content: space-between;
 }
 
-.training_item{
+.training_item {
     width: 100%;
     padding-top: 15px;
     padding-bottom: 15px;
     padding-right: 20px;
     padding-left: 20px;
     margin-bottom: 15px;
-    background:white;
+    background: white;
     -webkit-box-shadow: 2px 2px 11px -3px rgba(0, 0, 0, 0.33);
     box-shadow: 2px 2px 11px -3px rgba(0, 0, 0, 0.33);
     border-radius: 10px;
@@ -307,37 +314,77 @@ div.training_video {
     justify-content: space-between;
 }
 
-.training_item:hover{
+.training_item:hover {
     cursor: pointer;
 }
 
-.training_item .training_title{
+.training_item .training_title {
     font-size: 18px;
     padding-bottom: 10px;
     font-weight: bold;
 }
 
-.training_item .training_description{
+.training_item .training_description {
     padding-bottom: 10px;
 }
 
-.training_footer{
+.training_footer {
     font-size: 13px;
 }
 
-.in_process{
+.in_process {
     background: lightgrey;
 }
 
 
-.training_setting_panel{
+.training_setting_panel {
     width: 35px;
 }
 
-.btn{
+.training_setting_panel a{
+    font-size: 20px;
+}
+
+.btn {
     color: white;
 }
 
-.btn:hover,.btn:active, .btn:visited{
+.btn-default, .btn-white {
+    color: #464646;
+}
+
+.btn:hover, .btn:active, .btn:visited {
     color: white;
+}
+
+.btn-default:hover, .btn-default:active, .btn-default:visited, .btn-white:hover, .btn-white:active, .btn-white:visited {
+    color: #464646;
+}
+
+
+.logo_block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.name_area {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.bottom_logout_panel{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+
+.material_btn_block {
+    float: right;
+}
+
+
+.notika-main-menu-dropdown li.active{
+    border-bottom: 2px solid #00c292;
 }

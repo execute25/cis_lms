@@ -85,6 +85,26 @@
                             </div>
                         </div>
 
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="nk-int-mk  mg-t-10">
+                                <h5>Member ID</h5>
+                            </div>
+                            <div class="form-group ic-cmp-int">
+                                <div class="form-ic-cmp">
+                                    <i class="notika-icon notika-ip-locator"></i>
+                                </div>
+                                <div class="nk-int-st">
+                                    <input type="text"
+                                           name="id_number"
+                                           value="{{$user->id_number}}"
+                                           class="form-control"
+                                           disabled
+                                           placeholder="Email input">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="nk-int-mk  mg-t-10">
                                 <h5>Password</h5>

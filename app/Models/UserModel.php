@@ -6,7 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Maatwebsite\Excel\Cell;
 use Spatie\Permission\Traits\HasRoles;
 
 class UserModel extends Authenticatable
@@ -65,6 +67,20 @@ class UserModel extends Authenticatable
             "2" => "Youth department",
             "3" => "Old-Aged department",
         ];
+    }
+
+    public static function isLeader()
+    {
+
+        if (in_array(Auth::user()->getRoleNames()->toArray()[0], ["super-admin", "secretary"]))
+            return true;
+        
+        $cell = CellModel::where("leader_id", Auth::user()->id)->orWhere("team_leader_id", Auth::user()->id)->first();
+
+        if ($cell)
+            return true;
+
+        return false;
     }
 
     public function cells()

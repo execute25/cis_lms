@@ -10,7 +10,7 @@ function isLessonNotStartYet($training): bool
 
 function isLessonInProgress($training): bool
 {
-    if (($training->end_at . " " . $training->end_at_time) >= date("Y-m-d H:i", time()) && ($training->start_at . " " . $training->start_at_time) <= date("Y-m-d H:i", time()))
+    if (($training->end_at . " " . $training->end_at_time) >= date("Y-m-d H:i", time()) && (date("Y-m-d H:i", strtotime('-30 minutes', strtotime($training->start_at . " " . $training->start_at_time)))) <= date("Y-m-d H:i", time()))
         return true;
 
     return false;

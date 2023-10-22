@@ -78,7 +78,7 @@ class UserController extends BaseController
             ->with('admin_level_type', Request::get("admin_level_type", 1));
     }
 
-    public function update(CellUpdate $request, $id)
+    public function update( $id)
     {
         $user = $this->userRepo->updateUser($id);
         $this->userRepo->uploadUserImage($user, Request::file());
@@ -175,41 +175,119 @@ class UserController extends BaseController
         $number = 0;
 
 
-        while (($data = fgetcsv($file, 10000, ",")) !== FALSE) {
+        while (($data = fgetcsv($file, 10000, ",")) !== FALSE) { // upload users
 
             $number++;
 
-            if ($number == 1 || !isset($data[3]))
+            if ($number == 1 || !isset($data[1]))
                 continue;
 
 
-            $name = trim(mb_convert_encoding($data[0], 'UTF-8', 'UTF-8'));
-            $email = trim(mb_convert_encoding($data[2], 'UTF-8', 'UTF-8'));
+            $cust = trim(mb_convert_encoding($data[1], 'UTF-8', 'UTF-8'));
+            $cust = str_replace("중복_", "", $cust);
+
+            if (preg_match('/([A-Z]+)/', $cust, $matches)) {
+                $cust_prefix = $matches[0];
+            } else {
+                $cust_prefix = "";
+            }
+
+            if (preg_match('/\d+/', $cust, $matches)) {
+                $cust_number = $matches[0];
+            } else {
+                $cust_number = "";
+            }
+
+            $region = isset($data[3]) ? trim(mb_convert_encoding($data[3], 'UTF-8', 'UTF-8')) : ''; // 지역
+            $department = isset($data[10]) ? trim(mb_convert_encoding($data[10], 'UTF-8', 'UTF-8')) : ''; // 부서
+            $korean_name = isset($data[10]) ? trim(mb_convert_encoding($data[11], 'UTF-8', 'UTF-8')) : ''; // 이름(KR)
+            $name = isset($data[12]) ? trim(mb_convert_encoding($data[12], 'UTF-8', 'UTF-8')) : ''; // 이름(RU)
+            $gender = isset($data[13]) ? trim(mb_convert_encoding($data[13], 'UTF-8', 'UTF-8')) : ''; // gender
+            $birth = isset($data[14]) ? trim(mb_convert_encoding($data[14], 'UTF-8', 'UTF-8')) : ''; // 생년월일
+            $id_number = isset($data[16]) ? trim(mb_convert_encoding($data[16], 'UTF-8', 'UTF-8')) : ''; // 고유번호
+            $phone = isset($data[17]) ? trim(mb_convert_encoding($data[17], 'UTF-8', 'UTF-8')) : ''; // 전화번호
+            $member_type = isset($data[18]) ? trim(mb_convert_encoding($data[18], 'UTF-8', 'UTF-8')) : ''; // 직분
+            $register_type = isset($data[19]) ? trim(mb_convert_encoding($data[19], 'UTF-8', 'UTF-8')) : ''; // 등록상태
+            $nationality = isset($data[20]) ? trim(mb_convert_encoding($data[20], 'UTF-8', 'UTF-8')) : ''; // 국적
+            $country = isset($data[21]) ? trim(mb_convert_encoding($data[21], 'UTF-8', 'UTF-8')) : ''; // 국가
+            $city = isset($data[22]) ? trim(mb_convert_encoding($data[22], 'UTF-8', 'UTF-8')) : ''; // 도시명
+            $is_free_report = isset($data[23]) ? trim(mb_convert_encoding($data[23], 'UTF-8', 'UTF-8')) : ''; // 출결여부
+            $is_free_report = $is_free_report != "" && $is_free_report != "중복" ? 1 : 0;
+            $free_report_reason = isset($data[24]) ? trim(mb_convert_encoding($data[24], 'UTF-8', 'UTF-8')) : ''; // 사유/기간
 
 
-            if (!isset($name) || $name == "")
+            if (!isset($cust_number) || $cust_number == "")
                 continue;
 
             $users_inspect = UserModel::
-            where('name', '=', trim($name))
-                ->where('email', '=', trim($email))
+            where('cust_number', '=', $cust_number)
                 ->first();
 
             if ($users_inspect) {
                 $user = $users_inspect;
             } else {
                 $user = new UserModel;
+
+                if ($cust_number != "")
+                    $user->cust_number = $cust_number;
+
+                if ($cust_number != "")
+                    $user->email = $cust_number;
             }
 
-            $user->fill(array(
-                'name' => isset($data[0]) ? mb_convert_encoding($data[0], 'UTF-8', 'UTF-8') : '',
-                'korean_name' => isset($data[1]) ? mb_convert_encoding($data[1], 'UTF-8', 'UTF-8') : '',
-                'email' => isset($data[2]) ? mb_convert_encoding($data[2], 'UTF-8', 'UTF-8') : '',
-                'department' => isset($data[3]) ? mb_convert_encoding($data[3], 'UTF-8', 'UTF-8') : '',
-            ));
+
+            if ($region != "")
+                $user->cust_prefix = $cust_prefix;
+
+            if ($region != "")
+                $user->region = $region;
+
+            if ($department != "")
+                $user->department = $department;
+
+            if ($korean_name != "")
+                $user->korean_name = $korean_name;
+
+            if ($name != "")
+                $user->name = $name;
+
+            if ($gender != "")
+                $user->gender = $gender;
+
+            if ($birth != "")
+                $user->birth = $birth;
+
+            if ($id_number != "")
+                $user->id_number = $id_number;
+
+            if ($phone != "")
+                $user->phone = $phone;
+
+            if ($member_type != "")
+                $user->member_type = $member_type;
+
+            if ($register_type != "")
+                $user->register_type = $register_type;
+
+            if ($nationality != "")
+                $user->nationality = $nationality;
+
+            if ($country != "")
+                $user->country = $country;
+
+            if ($city != "")
+                $user->city = $city;
+
+            if ($is_free_report != "")
+                $user->is_free_report = $is_free_report;
+
+            if ($free_report_reason != "")
+                $user->free_report_reason = $free_report_reason;
+
             $user->save();
 
             $this->userRepo->attachRoleToUser($user, 'normal');
+            $this->userRepo->attachToCell($user, $data);
         }
 
         fclose($file);
