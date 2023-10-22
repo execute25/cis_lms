@@ -58,7 +58,10 @@ class CellDataTable extends DataTable
 
         $query = CellModel::query();
         $query = $query->select($this->getColumns())
-            ->leftjoin("regions", "regions.id", "=", "cells.region_id");
+            ->leftjoin("regions", "regions.id", "=", "cells.region_id")
+            ->leftjoin("users as leader", "leader.id", "=", "cells.leader_id")
+            ->leftjoin("users as team_leader", "team_leader.id", "=", "cells.team_leader_id")
+            ->leftjoin("users as dep_leader", "dep_leader.id", "=", "cells.dep_leader_id");
         return $this->applyScopes($query);
     }
 
@@ -87,7 +90,10 @@ class CellDataTable extends DataTable
         return [
             'cells.id',
             'cells.name',
-            'cells.leader_id',
+            'cells.team',
+            'leader.name as leader_name',
+            'team_leader.name as team_leader_name',
+            'dep_leader.name as dep_leader_name',
             'cells.leader_id as member_count',
             'regions.name as region_name',
         ];
@@ -105,11 +111,21 @@ class CellDataTable extends DataTable
             Column::make('id')
                 ->name("cells.id")
                 ->title("ID"),
+            Column::make('team')
+                ->name('cells.team')
+                ->title("Team"),
             Column::make('name')
                 ->name('cells.name')
                 ->title("Name"),
-            Column::make('leader_id')
+            Column::make('team_leader_name')
+                ->name('team_leader.name')
+                ->title("Team Leader Name"),
+            Column::make('leader_name')
+                ->name('leader.name')
                 ->title("Leader Name"),
+            Column::make('dep_leader_name')
+                ->name('dep_leader.name')
+                ->title("Dep Leader Name"),
 
             Column::computed("member_count")
                 ->exportable(false)

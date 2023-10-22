@@ -56,11 +56,15 @@ class CellController extends BaseController
         $cell = $this->cellRepo->getCellById($id);
         $regions = RegionModel::get();
         $selected_leader = UserModel::find($cell->leader_id);
+        $selected_team_leader = UserModel::find($cell->team_leader_id);
+        $selected_dep_leader = UserModel::find($cell->dep_leader_id);
 
         $this->layout->content = View::make('admin.cell.edit', [
             'cell' => $cell,
             'regions' => $regions,
             'selected_leader' => $selected_leader,
+            'selected_team_leader' => $selected_team_leader,
+            'selected_dep_leader' => $selected_dep_leader,
         ]);
     }
 

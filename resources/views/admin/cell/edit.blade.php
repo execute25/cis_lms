@@ -44,6 +44,26 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
                             <div class="nk-int-mk">
+                                <h5>Team Leader of cell</h5>
+                            </div>
+                            <div class="chosen-select-act fm-cmp-mg">
+                                <select name="team_leader_id" id="" class="select2 form-control leader_id" required=""
+                                        style="width: 100%;">
+
+                                    @if($selected_team_leader)
+                                        <option value="{{$selected_team_leader->id}}"
+                                                selected>{{$selected_team_leader->name}}
+                                            ({{$selected_team_leader->korean_name}})
+                                        </option>
+                                    @endif
+
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+                            <div class="nk-int-mk">
                                 <h5>Leader of cell</h5>
                             </div>
                             <div class="chosen-select-act fm-cmp-mg">
@@ -60,6 +80,25 @@
                             </div>
                         </div>
 
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-b-15">
+                            <div class="nk-int-mk">
+                                <h5>Dep Leader of cell</h5>
+                            </div>
+                            <div class="chosen-select-act fm-cmp-mg">
+                                <select name="dep_leader_id" id="" class="select2 form-control leader_id" required=""
+                                        style="width: 100%;">
+
+                                    @if($selected_dep_leader)
+                                        <option value="{{$selected_dep_leader->id}}"
+                                                selected>{{$selected_dep_leader->name}}
+                                            ({{$selected_dep_leader->korean_name}})
+                                        </option>
+                                    @endif
+
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="clearfix"></div>
 
