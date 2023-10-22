@@ -10,7 +10,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="breadcomb-wp">
                                     <div class="breadcomb-ctn">
-                                        <h2>{{__("Upcoming lectures")}}</h2>
+                                        <h2>{{__("Upcoming events")}}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -35,27 +35,43 @@
                                             <h2>{{$training->name}}</h2>
                                             <p class="ctn-ads">{{$training->category_title}}</p>
                                             <p class="ctn-ads">
+                                                  <span class="btn btn-block nk-teal show_time_detail"
+                                                        data-id="{{$training->id}}">
+                                                <i class="glyphicon glyphicon-time"></i>
                                                 {{__("Date")}}
                                                 :
-                                                {{ normalizeDate(dateTolocal($training->start_at))  }}
+                                              {{ normalizeDate(dateTolocal($training->start_at))  }}</span>
                                             </p>
                                         </div>
-                                        <p>{{$training->description}}.</p>
+                                        <p>{{$training->description}}</p>
 
                                     </div>
                                     <div class="training_btn_block" data-id="{{$training->id}}">
+
+                                        @if(countTrainingMaterials($training) == 1)
+                                            <a href="{{getFirstMaterial($training)}}" class="btn btn-block nk-indigo"
+                                               target="_blank"> <i
+                                                    class="glyphicon glyphicon-book"></i> {{__("Training material")}}
+                                            </a>
+                                        @elseif(countTrainingMaterials($training) > 1)
+                                            <a href="{{route("training.material_list", ['id' => $training->id])}}"
+                                               class="btn btn-block nk-indigo"><i
+                                                    class="glyphicon glyphicon-book"></i> {{__("Training material")}}
+                                            </a>
+                                        @endif
+
 
                                         @if( isLessonInProgress($training) && $training->training_type == \App\Models\TrainingModel::TRAINING_TYPE_ZOOM )
                                             <span
                                                 class="btn btn-success btn-block connect_to_training_zoom"
                                                 data-loading-text="{{__("Loading")}}..."
-                                            >{{__("Connect to a lecture via Zoom")}}</span>
+                                            ><i class="glyphicon glyphicon-leaf"></i> {{__("Connect to a lecture via Zoom")}}</span>
 
                                         @elseif(isLessonNotStartYet($training) && $training->training_type == \App\Models\TrainingModel::TRAINING_TYPE_ZOOM)
                                             <span
                                                 class="remind_to_start_text">{{getRemindTime($training->start_at)}}</span>
                                             <span
-                                                class="btn btn-default btn-block">{{__("The online lecture in ZOOM has not started yet")}}</span>
+                                                class="btn btn-default btn-block connect_to_training_zoom">{{__("The online lecture in ZOOM has not started yet")}}</span>
                                         @elseif(isLessonInProgress($training) && $training->training_type == \App\Models\TrainingModel::TRAINING_TYPE_REPEAT_LECTION)
                                             <a href="{{ route('training.show_video', ['id' => $training->id]) }}"
                                                class="btn btn-warning btn-block">{{__("Go to lecture replay")}}</a>
@@ -64,7 +80,8 @@
                                             <span
                                                 class="remind_to_start_text">{{getRemindTime($training->start_at, $training->training_type)}}</span>
                                             <span
-                                                class="btn btn-default btn-block">{{__("Viewing the replay of this lecture is not yet open")}}</span>
+                                                class="btn btn-default btn-block"><i
+                                                    class="glyphicon glyphicon-play-circle"></i> {{__("Viewing the replay of this lecture is not yet open")}}</span>
 
                                         @endif
                                     </div>
@@ -76,6 +93,28 @@
             </div>
         </div>
     </div>
+
+    <div class="modal  fade " id="time_list_modal" role="dialog" style="">
+        <div class="modal-dialog modal-large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="time_list_block">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect"
+                            data-dismiss="modal">{{__("Close")}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 @stop
@@ -119,6 +158,29 @@
 
                         console.log(error['responseText'])
                         $btn.button('reset');
+                    },
+                });
+            })
+
+
+            $('body').on('click', ".show_time_detail", function () {
+                $("#time_list_modal").modal();
+
+                var training_id = $(this).attr("data-id");
+
+                $.ajax({
+                    url: '/web/training/' + training_id + '/get_time_list',
+                    data: {},
+                    method: "GET",
+                    success: function (data) {
+                        var time_list = $(data).find(".time_list").html();
+                        $(".time_list_block").html(time_list);
+
+                        console.log(time_list)
+
+                    },
+                    error: function (error) {
+                        console.log(error['responseText'])
                     },
                 });
             })

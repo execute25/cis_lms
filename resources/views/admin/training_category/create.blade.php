@@ -37,7 +37,7 @@
                                     <i class="glyphicon glyphicon-equalizer"></i>
                                 </div>
                                 <div class="nk-int-st">
-                    <textarea class="form-control" required="" placeholder="Description input" name="description" id=""
+                    <textarea class="form-control" placeholder="Description input" name="description" id=""
                               cols="30" rows="3"></textarea>
                                 </div>
                             </div>
@@ -91,6 +91,9 @@
                                 </div>
                             </div>
                         </div>
+
+
+
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="nk-int-mk  mg-t-10">

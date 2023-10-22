@@ -10,7 +10,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="breadcomb-wp">
                                     <div class="breadcomb-ctn">
-                                        <h2>{{__("Available training")}}</h2>
+                                        <h2>{{__("Available events")}}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -39,7 +39,7 @@
 {{--                                   <i class="glyphicon glyphicon-book"></i> {{__("Lessons count:")}}  {{$training_category->lection_count}}--}}
 {{--                                </span>--}}
 
-                                <span class="btn btn-warning">{{__("Go to the list of lectures")}}</span>
+                                <span class="btn btn-block btn-warning">{{__("Go to the list of lectures")}}</span>
                             </div>
                         </article>
 

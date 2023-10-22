@@ -90,23 +90,28 @@
 <div class="header-top-area">
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-6">
-                <div class="logo-area">
-                    <a href="#" class="logo_link"><img src="/src/img/logo/logo.png" alt=""/> CIS</a>
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="logo_block">
+                    <div class="logo-area">
+                        <a href="/" class="logo_link"><img src="/src/img/logo/logo.png" alt=""/> CIS</a>
+                    </div>
+
+                    <div class="name_area">{{Auth::check() ?   Auth::user()->name : ''}}</div>
                 </div>
             </div>
+            @role(['super-admin'])
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-6">
                 <div class="header-top-menu">
                     <ul class="nav navbar-nav notika-top-nav">
 
-                        @role(['super-admin'])
+
                         <li class="nav-item nc-al">
                             <a href="/admin/setting/change_setting" role="button"
                                aria-expanded="false" class="nav-link dropdown-toggle"><span><i
                                         class="notika-icon notika-settings"></i></span>
                             </a>
                         </li>
-                        @endrole
+
 
                         <li class="nav-item nc-al">
                             <a href="/logout"
@@ -119,6 +124,7 @@
                     </ul>
                 </div>
             </div>
+            @endrole
         </div>
     </div>
 </div>
@@ -131,31 +137,36 @@
                 <div class="mobile-menu">
                     <nav id="dropdown">
                         <ul class="mobile-menu-nav">
-                            <li><a data-toggle="collapse" data-target="#Charts" href="#">Home</a>
-                                <ul class="collapse dropdown-header-top">
-                                    <li><a href="index.html">Dashboard One</a></li>
-                                    <li><a href="index-2.html">Dashboard Two</a></li>
-                                    <li><a href="index-3.html">Dashboard Three</a></li>
-                                    <li><a href="index-4.html">Dashboard Four</a></li>
-                                    <li><a href="analytics.html">Analytics</a></li>
-                                    <li><a href="widgets.html">Widgets</a></li>
-                                </ul>
-                            </li>
-                            <li><a data-toggle="collapse" data-target="#demoevent" href="#">Обучения</a>
+                            @role(['super-admin', 'secretary'])
+                            <li>
+                                <a data-toggle="collapse" data-target="#demoevent" href="#">{{ __("Admin Panel") }}</a>
                                 <ul id="demoevent" class="collapse dropdown-header-top">
-                                    <li><a href="inbox.html">Продстоящие обучения</a></li>
+                                    <li class="{{Route::is('user.*') ? 'active' : ''}}"><a
+                                            href="{{ route('user.index') }}">Users</a></li>
+                                    <li class="{{ Route::is('cell.*') ? 'active' : '' }}"><a
+                                            href="{{ route('cell.index') }}">Cells</a></li>
+                                    <li class="{{ Route::is('region.*') ? 'active' : '' }}"><a
+                                            href="{{ route('region.index') }}">Regions</a></li>
+                                    <li class="{{ Route::is('training_category.*') || Route::is('admin.training.*') ? 'active' : '' }}">
+                                        <a href="{{ route('training_category.index') }} ">Training Categories</a></li>
+                                    <li class="{{ Route::is('membergroup.*') ? 'active' : '' }}"><a
+                                            href="{{ route('membergroup.index') }} ">Member Groups</a></li>
                                 </ul>
+
                             </li>
-                            {{--                            <li><a data-toggle="collapse" data-target="#democrou" href="#">Interface</a>--}}
-                            {{--                                <ul id="democrou" class="collapse dropdown-header-top">--}}
-                            {{--                                    <li><a href="animations.html">Animations</a></li>--}}
-                            {{--                                    <li><a href="google-map.html">Google Map</a></li>--}}
-                            {{--                                    <li><a href="data-map.html">Data Maps</a></li>--}}
-                            {{--                                    <li><a href="code-editor.html">Code Editor</a></li>--}}
-                            {{--                                    <li><a href="image-cropper.html">Images Cropper</a></li>--}}
-                            {{--                                    <li><a href="wizard.html">Wizard</a></li>--}}
-                            {{--                                </ul>--}}
-                            {{--                            </li>--}}
+                            @endrole
+                            <li>
+                                <a data-toggle="collapse" data-target="#demoevent" href="#">{{ __("Events") }}</a>
+                                <ul id="demoevent" class="collapse dropdown-header-top">
+                                    <li>
+                                        <a href="{{ route('training.upcoming_trainings') }} ">{{ __("Upcoming events") }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('training.available_training_categories') }} ">{{ __("Available events") }}</a>
+                                    </li>
+                                </ul>
+
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -178,7 +189,7 @@
                     @endrole
                     <li class="{{ Route::is('training.*') && !Route::is('admin.training.*') ? 'active' : '' }}"><a
                             data-toggle="tab" href="#edu"><i
-                                class="notika-icon notika-mail"></i> Обучения</a>
+                                class="notika-icon notika-mail"></i> {{ __("Events") }}</a>
                     </li>
                 </ul>
                 <div class="tab-content custom-menu-content">
@@ -207,10 +218,10 @@
                          class="tab-pane notika-tab-menu-bg animated flipInX {{ Route::is('training.*') ? 'active' : '' }}">
                         <ul class="notika-main-menu-dropdown">
                             <li class="{{ Route::is('training.upcoming_trainings') ? 'active' : '' }}"><a
-                                    href="{{ route('training.upcoming_trainings') }} ">{{ __("Upcoming lectures") }}</a>
+                                    href="{{ route('training.upcoming_trainings') }} ">{{ __("Upcoming events") }}</a>
                             </li>
                             <li class="{{ Route::is('training.available_training_categories') ? 'active' : '' }}"><a
-                                    href="{{ route('training.available_training_categories') }} ">{{ __("Available training") }}</a>
+                                    href="{{ route('training.available_training_categories') }} ">{{ __("Available events") }}</a>
                             </li>
                         </ul>
                     </div>
@@ -242,6 +253,13 @@
                     <p>Copyright © 2023
                         . All rights reserved. CIS Region</p>
                 </div>
+            </div>
+
+            <div class="bottom_logout_panel">
+                <a href="/logout"
+                   aria-expanded="false" class="nav-link dropdown-toggle"><span><i
+                            class="glyphicon glyphicon-log-out"></i> Выйти</span>
+                </a>
             </div>
         </div>
     </div>

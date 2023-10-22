@@ -34,7 +34,7 @@
                                         <i class="glyphicon glyphicon-equalizer"></i>
                                     </div>
                                     <div class="nk-int-st">
-                    <textarea class="form-control" required=""
+                    <textarea class="form-control"
                               placeholder="Description input" name="description" id="" cols="30"
                               rows="3"></textarea>
                                     </div>
@@ -100,6 +100,12 @@
                         @include('web.templates.training_live_time', ["index" => 2])
                         @include('web.templates.training_live_time', ["index" => 3])
                         @include('web.templates.training_live_time', ["index" => 4])
+                        @include('web.templates.training_live_time', ["index" => 5])
+                        @include('web.templates.training_live_time', ["index" => 6])
+                        @include('web.templates.training_live_time', ["index" => 7])
+                        @include('web.templates.training_live_time', ["index" => 8])
+                        @include('web.templates.training_live_time', ["index" => 9])
+                        @include('web.templates.training_live_time', ["index" => 10])
 
 
                     </div>
@@ -138,7 +144,7 @@
         </div>
         <input type="hidden" class="form-control" name="category_id" required=""
                value="{{$category_id}}">
-        <button class="btn btn-lg btn-primary btn-block"><i class="icon-plus"></i>Create</button>
+        <button class="btn btn-lg btn-primary btn-block create_btn"><i class="icon-plus"></i>Create</button>
 
     </form>
 @stop
@@ -178,8 +184,14 @@
                 beforeSubmit: function (arr, $form) {
                     if (!$form.parsley('isValid'))
                         return false;
+
+
+                    $(".create_btn").button('loading');
+
+
                 },
                 success: function () {
+                    $(".create_btn").button('reset');
                     swal({
                         title: "",
                         text: "Region was successfully created",
@@ -192,7 +204,7 @@
 
                 },
                 error: function (error) {
-
+                    $(".create_btn").button('reset');
                     swal({
                         title: "",
                         text: "Was error while training register",

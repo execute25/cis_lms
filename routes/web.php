@@ -20,6 +20,10 @@ Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function 
 
     Route::resource('admin/region', 'App\Http\Controllers\RegionController');
 
+    Route::any('admin/user/batch', 'App\Http\Controllers\UserController@batch');
+    Route::resource('admin/user', 'App\Http\Controllers\UserController');
+
+
     Route::get('admin/user/get_user_list', 'App\Http\Controllers\UserController@get_user_list');
     Route::get('admin/user/search_users', 'App\Http\Controllers\UserController@search_users');
 
@@ -39,8 +43,7 @@ Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function 
 
 
 Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
-    Route::any('admin/user/batch', 'App\Http\Controllers\UserController@batch');
-    Route::resource('admin/user', 'App\Http\Controllers\UserController');
+
 
     Route::get('admin/setting/change_setting', 'App\Http\Controllers\SettingController@change_setting');
     Route::resource('admin/setting', 'App\Http\Controllers\SettingController');
@@ -48,11 +51,11 @@ Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
 });
 
 
-Route::group(['middleware' => ['auth', 'role:super-admin|secretary']], function () {
-    Route::post('/training/{id}/attendance_list', 'App\Http\Controllers\TrainingController@attendance_list')->name("training.attendance_list");
-});
+//Route::group(['middleware' => ['auth', 'role:super-admin|secretary|cell-leader']], function () {
+//});
 
 Route::group(['middleware' => ['auth'], 'prefix' => '/web'], function () {
+    Route::get('/training/{id}/attendance_list', 'App\Http\Controllers\TrainingController@attendance_list')->name("training.attendance_list");
     Route::get('/training/upcoming_trainings', 'App\Http\Controllers\TrainingController@upcoming_trainings')->name("training.upcoming_trainings");
     Route::get('/training/available_training_categories', 'App\Http\Controllers\TrainingController@available_training_categories')->name("training.available_training_categories");
     Route::get('/training/{id}/get_zoom_join_link', 'App\Http\Controllers\TrainingController@get_zoom_join_link')->name("training.get_zoom_join_link");
@@ -60,6 +63,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => '/web'], function () {
     Route::get('/training/{id}/material_list', 'App\Http\Controllers\TrainingController@material_list')->name("training.material_list");
     Route::post('/training/{id}/update_watch_point', 'App\Http\Controllers\TrainingController@update_watch_point')->name("training.update_watch_point");
     Route::post('/training/{id}/finish_lection', 'App\Http\Controllers\TrainingController@finish_lection')->name("training.finish_lection");
+    Route::get('/training/{id}/get_time_list', 'App\Http\Controllers\TrainingController@get_time_list')->name("training.get_time_list");
+    Route::post('/training/{id}/change_is_offline', 'App\Http\Controllers\TrainingController@change_is_offline')->name("training.change_is_offline");
 
     Route::get('/training/training_list', 'App\Http\Controllers\TrainingController@training_list')->name("training.training_list");
 
@@ -69,7 +74,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => '/web'], function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', 'App\Http\Controllers\HomeController@main_page');
+    Route::get('/', 'App\Http\Controllers\TrainingController@upcoming_trainings');
 });
 
 Route::get('redirect_zoom', 'App\Http\Controllers\ZoomController@redirect_zoom');

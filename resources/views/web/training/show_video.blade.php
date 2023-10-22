@@ -7,7 +7,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="breadcomb-list">
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 <div class="breadcomb-wp">
                                     <div class="rating_cont" style="">
                                         <div class="easypiechart easyPieChart easypiechart"
@@ -26,6 +26,24 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="material_btn_block">
+                                    @if(countTrainingMaterials($training) == 1)
+                                        <a href="{{getFirstMaterial($training)}}" class="btn nk-indigo"
+                                           target="_blank"> <i
+                                                class="glyphicon glyphicon-book"></i> {{__("Training material")}}
+                                        </a>
+                                    @elseif(countTrainingMaterials($training) > 1)
+                                        <a href="{{route("training.material_list", ['id' => $training->id])}}"
+                                           class="btn nk-indigo"><i
+                                                class="glyphicon glyphicon-book"></i> {{__("Training material")}}
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>

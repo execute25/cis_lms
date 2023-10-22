@@ -101,6 +101,12 @@
                         @include('web.templates.training_live_time', ["index" => 2])
                         @include('web.templates.training_live_time', ["index" => 3])
                         @include('web.templates.training_live_time', ["index" => 4])
+                        @include('web.templates.training_live_time', ["index" => 5])
+                        @include('web.templates.training_live_time', ["index" => 6])
+                        @include('web.templates.training_live_time', ["index" => 7])
+                        @include('web.templates.training_live_time', ["index" => 8])
+                        @include('web.templates.training_live_time', ["index" => 9])
+                        @include('web.templates.training_live_time', ["index" => 10])
 
 
                     </div>

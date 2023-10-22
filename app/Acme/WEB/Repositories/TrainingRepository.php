@@ -10,6 +10,7 @@ use App\Models\TrainingModel;
 use App\Models\TrainingRepeatTimeModel;
 use App\Models\TrainingUserModel;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -59,7 +60,7 @@ class TrainingRepository
         if (Request::filled("include_groups"))
             $query->include_groups = implode(",", Request::get("include_groups"));
 
-
+        $query->description = Request::filled("description") ? Request::get("description") : "";
         $query->save();
 
         return $query;
@@ -131,7 +132,11 @@ class TrainingRepository
                 , DB::raw("CONCAT('0') as training_type")
             )
             ->with([
-                "training_live_times", "training_repeat_times"
+                "training_live_times" => function ($q) {
+                    $q->orderBy("start_at", "asc");
+                }, "training_repeat_times" => function ($q) {
+                    $q->orderBy("start_at", "asc");
+                }
             ])
             ->groupBy(
                 "trainings.id",
@@ -165,7 +170,11 @@ class TrainingRepository
                 , DB::raw("CONCAT('1') as training_type")
             )
             ->with([
-                "training_live_times", "training_repeat_times"
+                "training_live_times" => function ($q) {
+                    $q->orderBy("start_at", "asc");
+                }, "training_repeat_times" => function ($q) {
+                    $q->orderBy("start_at", "asc");
+                }
             ])
             ->groupBy(
                 "trainings.id",
@@ -228,14 +237,14 @@ class TrainingRepository
         return TrainingModel::where("zoom_conference_id", $meeting_id)->first();
     }
 
-    public function getOrCreateTrainingUserByTrainingId($training, $user_id)
+    public function getOrCreateTrainingUserByTrainingId($training_id, $user_id)
     {
-        $training_user = TrainingUserModel::where("training_id", $training->id)
+        $training_user = TrainingUserModel::where("training_id", $training_id)
             ->where("user_id", $user_id)->first();
 
         if (!$training_user)
             $training_user = TrainingUserModel::create([
-                "training_id" => $training->id,
+                "training_id" => $training_id,
                 "user_id" => $user_id,
             ]);
 
@@ -366,14 +375,14 @@ class TrainingRepository
         $trainings = TrainingModel::
         leftjoin("training_users", "trainings.id", "=", DB::raw("training_users.training_id AND training_users.user_id = " . Auth::user()->id))
             ->whereIn("trainings.category_id", $allow_category_id)->where("trainings.category_id", $category_id)
-            ->where("bunny_id", "!=", "")
+//            ->where("bunny_id", "!=", "")
             ->select(
                 "trainings.*"
                 , "training_users.attend_duration"
                 , "training_users.watch_time"
                 , "training_users.progress"
             )
-            ->orderBy("training_users.id",'desc')
+            ->orderBy("training_users.id", 'desc')
             ->get();
 
 
@@ -448,6 +457,42 @@ class TrainingRepository
 
         $model->save();
         return $model;
+    }
+
+    public function getTrainingReports($training_id, $cell_list)
+    {
+
+        foreach ($cell_list as $cell) {
+
+            foreach ($cell->members as $member) {
+                $training_user = TrainingUserModel::where("training_id", $training_id)->where("user_id", $member->id)->first();
+                if ($training_user) {
+                    $member->report = $training_user;
+                } else {
+                    $member->report = [];
+                }
+
+            }
+
+        }
+
+        return $cell_list;
+
+    }
+
+    public function isHavePrivileges($member_id, $cell_id)
+    {
+        if (in_array(Auth::user()->getRoleNames()->toArray()[0], ["super-admin", "secretary"]))
+            return true;
+
+
+        $cellRepo = App::make("Acme\WEB\Repositories\CellRepository");
+        $cell = $cellRepo->getCellById($cell_id);
+
+        if (Auth::user()->id == $cell->leader_id || Auth::user()->id == $cell->team_leader_id)
+            return true;
+
+        return false;
     }
 
 

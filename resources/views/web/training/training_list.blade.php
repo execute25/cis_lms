@@ -33,6 +33,9 @@
                             <div>
                                 <div class="training_title">{{$training->name}}</div>
                                 <div class="training_description">{{$training->description}}</div>
+
+
+
                                 <div class="training_footer">
                                     @if($training->in_process == 1)
                                         <span style="color: #cb3939;"> <i class="glyphicon glyphicon-folder-close"></i> {{__("Access to this lecture is closed because the lecture has not yet ended. You can join on the 'Upcoming Lectures' page")}}</span>
@@ -44,12 +47,14 @@
                                 </div>
                             </div>
 
-                            @role(['super-admin', 'secretary', 'team-leader', 'cell-leader'])
-                            <div class="training_setting_panel">
-                                <a href="{{route("training.attendance_list",["id"=>$training->id])}}"><i
-                                        class="glyphicon glyphicon-user"></i></a>
-                            </div>
-                            @endrole
+                            @if(\App\Models\UserModel::isLeader())
+                                {{--                            @role(['super-admin', 'secretary', 'team-leader', 'cell-leader'])--}}
+                                <div class="training_setting_panel">
+                                    <a href="{{route("training.attendance_list",["id"=>$training->id])}}"><i
+                                            class="glyphicon glyphicon-user"></i></a>
+                                </div>
+                            @endif
+                            {{--                            @endrole--}}
                         </article>
 
                     @endforeach

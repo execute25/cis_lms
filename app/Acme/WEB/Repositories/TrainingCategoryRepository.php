@@ -31,6 +31,7 @@ class TrainingCategoryRepository
             $data
         );
 
+        $query->description = Request::filled("description") ? Request::get("description") : '';
         $query->save();
 
         return $query;
@@ -47,8 +48,8 @@ class TrainingCategoryRepository
 //        $data = array_filter(Request::all());
         $query->fill(Request::all());
 
+        $query->description = Request::filled("description") ? Request::get("description") : '';
         $query->save();
-
 
 
         return $query;

@@ -34,7 +34,7 @@
                                     <i class="glyphicon glyphicon-equalizer"></i>
                                 </div>
                                 <div class="nk-int-st">
-                    <textarea class="form-control" required="" placeholder="Description input" name="description" id=""
+                    <textarea class="form-control"  placeholder="Description input" name="description" id=""
                               cols="30" rows="3">{{{ $training_category->description }}}</textarea>
                                 </div>
                             </div>
